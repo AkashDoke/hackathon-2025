@@ -1,0 +1,5 @@
+streamlit 
+pydantic
+crewai
+crewai_tools
+agentops
