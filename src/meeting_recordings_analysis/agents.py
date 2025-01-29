@@ -3,8 +3,8 @@ from crewai import Agent, LLM
 class Agents():
 
     def __init__(self):
-      self.llm = LLM( model="ollama/llama3.2:1b",
-        base_url="http://localhost:11434")
+      self.llm = LLM( model="gemini/gemini-1.5-flash",
+        api_key="AIzaSyAYkl1kP3MTcDsRItL1yBv5_QPabqoaOzA")
     #model="llama3-8b-8192")
     #anthropic_api_key = os.getenv("ANTHROPIC_API_KEY")
     #self.llm = ChatAnthropic(anthropic_api_key=anthropic_api_key,

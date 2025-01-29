@@ -3,3 +3,6 @@ pydantic
 crewai
 crewai_tools
 agentops
+requests
+json
+re

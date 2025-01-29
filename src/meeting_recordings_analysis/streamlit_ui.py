@@ -127,7 +127,9 @@ if uploaded_file:
 
     with col5:
         if st.button("Create JIRA Tasks"):
-            st.info("JIRA task creation triggered. Integrate your JIRA service logic here.")
+            with st.spinner("Creating JIRA tasks..."):
+                tasks = meeting_minutes_flow.generate_jira_task()
+                st.success("JIRA task creation triggered. Integrate your JIRA service logic here.")
 
 # Footer
 st.write("---")
