@@ -2,7 +2,7 @@ import streamlit as st
 from streamlit.components.v1 import html
 
 # Import the main processing logic
-from main import meeting_minutes_flow
+from meeting_recordings_analysis.main import meeting_minutes_flow
 
 # Set up the page
 st.set_page_config(page_title="Meeting Minutes Generator", layout="wide")
