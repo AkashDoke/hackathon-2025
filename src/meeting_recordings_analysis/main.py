@@ -2,17 +2,18 @@ import os
 from pydantic import BaseModel
 from meeting_recordings_analysis.agents import Agents
 from meeting_recordings_analysis.tasks import Tasks
-from crewai import Crew
+from crewai import Crew , LLM
 import agentops
 import streamlit as st
-import msal
+#import msal
 from meeting_recordings_analysis.jira.utils import parse_markdown, create_jira_issue
+from dotenv import load_dotenv
 
 #agentops.init(api_key="8eba4d8b-0246-42f8-adb4-0b16f7f5fd61")
 
 # MSAL Authentication Configuration
-CLIENT_ID = "c2a66d44-0827-420a-af20-91fab30ea419"
-TENANT_ID = "b3d2bfa8-536e-4864-8ada-5f93cc8faea3"
+CLIENT_ID = os.getenv("CLIENT_ID")
+TENANT_ID = os.getenv("TENANT_ID")
 AUTHORITY = f"https://login.microsoftonline.com/{TENANT_ID}"
 SCOPES = ["User.Read"]
 
@@ -38,15 +39,30 @@ Transcription: Good afternoon, everyone, and welcome to FinTech Plus Sync's 2nd 
         return full_transcription
 
     def generate_summary(self):
-        summarize_agent = Agents().summarizer_agent()
+
+        agent = Agents()
+
+        summarize_agent = agent.summarizer_agent()     
         summarize_agent_task = Tasks().summarizer_agent_task(summarize_agent, self.state.transcript)
 
-        crew = Crew(agents=[summarize_agent],
-                        tasks=[summarize_agent_task],
+        meeting_minutes_writer = agent.meeting_minutes_writer()
+        meeting_minutes_writer_task = Tasks().meeting_minutes_writing_task(meeting_minutes_writer)
+
+        crew = Crew(agents=[summarize_agent, meeting_minutes_writer],
+                        tasks=[summarize_agent_task, meeting_minutes_writer_task],
                         verbose=False)
-        
         result = crew.kickoff()
         self.meeting_minutes = result
+
+        
+        gmail_draft_agent = agent.gmail_draft_agent()
+        gmail_draft_task = Tasks().gmail_draft_task(gmail_draft_agent, result)
+
+        gmailcrew = Crew(agents=[gmail_draft_agent],
+                        tasks=[gmail_draft_task],
+                        verbose=False)
+        gmailcrew.kickoff()
+
         return result
 
     def generate_meeting_minutes_faq(self):
@@ -62,91 +78,33 @@ Transcription: Good afternoon, everyone, and welcome to FinTech Plus Sync's 2nd 
         return result
     
     def generate_meeting_minutes_jira_tasks(self):
-        summarize_faq_agent = Agents().summarizer_jira_agent()
-        summarize_faq_agent_task = Tasks().summarizer_jira_agent_task(summarize_faq_agent, self.state.transcript)
+        summarizer_jira_agent = Agents().summarizer_jira_agent()
+        summarizer_jira_agent_task = Tasks().summarizer_jira_agent_task(summarizer_jira_agent, self.state.transcript)
 
-        crew = Crew(agents=[summarize_faq_agent],
-                        tasks=[summarize_faq_agent_task],
+        crew = Crew(agents=[summarizer_jira_agent],
+                        tasks=[summarizer_jira_agent_task],
                         verbose=False)
         
         result = crew.kickoff()
         self.meeting_minutes_jira_tasks = result
+
+        # jira_draft_agent = Agents().jira_draft_agent()
+        # jira_draft_task = Tasks().jira_draft_task(jira_draft_agent, result)
+
+        # jiracrew = Crew(agents=[jira_draft_agent],
+        #                 tasks=[jira_draft_task],
+        #                 verbose=False)
+        
+        # jiracrew.kickoff()
+
         return result
     
-    def generate_jira_task(self):
-
-        jira_story_value = """```
-**Story Title**: Q2 2023 Earnings Call - Actionable Insights and Next Steps
-
-**Story Description**: This story outlines tasks derived from the Q2 2023 FinTech Plus Sync earnings call, focusing on key performance indicators, strategic initiatives, and upcoming plans.  The goal is to translate the call's highlights into actionable items and ensure follow-through on key strategies.
-
-
-**Tasks**:
-
-- **Task 1: Analyze Q2 Performance & Identify Key Trends**
-    - **Priority**: High
-    - **Assignee**: Data Analytics Team
-    - **Due Date**: 2023-10-27
-    - **Sub-tasks**:
-        - Analyze revenue growth (25% YoY) and identify contributing factors.
-        - Investigate gross profit margin (58%) and identify areas for further improvement.
-        - Analyze EBITDA margin (30%) and pinpoint key drivers.
-        - Examine net income increase and explore future growth potential.
-        - Analyze the impact of high-yield savings and RoboAdvisor platform expansion on the total addressable market.
-        - Assess the diversification strategy for the asset-backed securities portfolio.
-        - Evaluate the effectiveness of the $25 million investment in AAA-rated corporate bonds.
-        - Analyze customer acquisition cost (CAC) reduction (15%) and lifetime value (LTV) growth (25%).  Assess the LTV/CAC ratio (3.5x).
-        - Review the Value-at-Risk (VaR) model and its implications for risk management.
-
-- **Task 2: Develop Q3 Strategic Plan Based on Q2 Performance**
-    - **Priority**: High
-    - **Assignee**: Strategy Team
-    - **Due Date**: 2023-10-31
-    - **Sub-tasks**:
-        - Develop a detailed plan to achieve the projected Q3 revenue of $135 million (8% QoQ growth).
-        - Outline specific strategies to leverage blockchain solutions and AI-driven predictive analytics for growth.
-        - Create a detailed action plan to support the upcoming IPO of Pay Plus and manage the anticipated $200 million funding.
-        - Analyze the debt-to-equity ratio (1.5) and propose strategies for maintaining financial health during expansion.
-
-- **Task 3: Prepare and Distribute Q2 Earnings Report**
-    - **Priority**: High
-    - **Assignee**: Marketing & Communications Team
-    - **Due Date**: 2023-10-20
-    - **Sub-tasks**:
-        - Create a comprehensive report summarizing Q2 performance.
-        - Prepare a presentation for shareholders and investors.
-        - Disseminate the report and presentation through appropriate channels.
-
-- **Task 4: Monitor Key Performance Indicators (KPIs) in Q3**
-    - **Priority**: High
-    - **Assignee**: Operations Team
-    - **Due Date**: Ongoing
-    - **Sub-tasks**:
-        - Track revenue, gross profit margin, EBITDA, net income, and other relevant KPIs.
-        - Monitor customer acquisition costs and lifetime value.
-        - Continuously assess risk using the VaR model and Tier 1 capital ratio.
-        - Regularly report on progress towards Q3 goals.
-
-
-- **Task 5:  Prepare for Pay Plus IPO**
-    - **Priority**: High
-    - **Assignee**: Finance Team & Pay Plus Team
-    - **Due Date**: Ongoing (leading up to IPO)
-    - **Sub-tasks**:
-        - Finalize IPO documentation.
-        - Secure necessary regulatory approvals.
-        - Manage investor relations activities.
-        - Plan for post-IPO integration and growth strategies.
-
-```"""
-
-        trimmed_markdown = jira_story_value.strip("```").strip()
-        story = parse_markdown(trimmed_markdown)
-        create_jira_issue(story)
-
-
-        print(story)
-
-        return story
+    # def generate_jira_task(self):
+    #     trimmed_markdown = self.meeting_minutes_jira_tasks.strip("```").strip()
+    #     story = parse_markdown(trimmed_markdown)
+    #     create_jira_issue(story)
+    #     print(story)
+    #     return story
+    
 # Create an instance of the flow
 meeting_minutes_flow = MeetingMinutesFlow()
