@@ -6,7 +6,7 @@ from meeting_recordings_analysis.jira.utils import parse_markdown, create_jira_i
 
 class JiraCustomToolInput(BaseModel):
     """Input schema for MyCustomTool."""
-    ticket_details: str = Field(..., description="Description of the argument.")
+    body: str = Field(..., description="Description of the argument.")
 
 
 class JiraCustomTool(BaseTool):
@@ -16,18 +16,12 @@ class JiraCustomTool(BaseTool):
     )
     args_schema: Type[BaseModel] = JiraCustomToolInput
 
-    def _run(self, ticket_details: str) -> str:
+    def _run(self, body: str) -> str:
 
-        trimmed_markdown = str(ticket_details).strip("```").strip()
+        trimmed_markdown = body.strip("```").strip()
+        print("trimmed_markdown", trimmed_markdown)
         story = parse_markdown_v2(trimmed_markdown)
-        print(story)
-        create_jira_issue(story)
-        print(ticket_details)
+        print("story", story)
 
-        # trimmed_markdown = self.meeting_minutes_jira_tasks.strip("```").strip()
-        # print(ticket_details)
-        # print(trimmed_markdown)
-        # story = parse_markdown(trimmed_markdown)
-        # create_jira_issue(story)
-        # Implementation goes here
+        #create_jira_issue(story)
         return "this is an example of a tool output, ignore it and move along."

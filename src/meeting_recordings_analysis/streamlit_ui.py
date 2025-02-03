@@ -106,14 +106,15 @@ if uploaded_file:
             with st.spinner("Generating summary..."):
                 summary = meeting_minutes_flow.generate_summary()
                 st.success("Summary Generated!")
-                st.text_area("Summary", summary, height=200)
+                st.markdown(summary, unsafe_allow_html=True)
+                #st.text_area("Summary", summary, height=200)
 
     with col2:
         if st.button("Generate FAQ"):
             with st.spinner("Generating FAQ..."):
                 faq = meeting_minutes_flow.generate_meeting_minutes_faq()
                 st.success("FAQ Generated!")
-                st.text_area("FAQ", faq, height=200)
+                st.markdown(faq, unsafe_allow_html=True)
 
     with col3:
         if st.button("Generate Tasks"):
