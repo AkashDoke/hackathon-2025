@@ -1,4 +1,9 @@
 import os
+import sys
+
+# Set the working directory
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from pydantic import BaseModel
 from meeting_recordings_analysis.agents import Agents
 from meeting_recordings_analysis.tasks import Tasks
@@ -6,7 +11,7 @@ from crewai import Crew , LLM
 import agentops
 import streamlit as st
 #import msal
-from meeting_recordings_analysis.jira.utils import parse_markdown, create_jira_issue
+from meeting_recordings_analysis.jira.utils import parse_markdown, create_jira_issue, parse_markdown_v2
 from dotenv import load_dotenv
 
 #agentops.init(api_key="8eba4d8b-0246-42f8-adb4-0b16f7f5fd61")
@@ -87,12 +92,24 @@ Transcription: Good afternoon, everyone, and welcome to FinTech Plus Sync's 2nd 
         
         result = crew.kickoff()
         self.meeting_minutes_jira_tasks = result
+        print(result)
+        trimmed_markdown = str(result).strip("```").strip()
+        story = parse_markdown_v2(trimmed_markdown)
+        print(story)
+        create_jira_issue(story)
+        # trimmed_markdown:str = self.meeting_minutes_jira_tasks
+        # story = parse_markdown(trimmed_markdown)
+        # print(story)
+        # create_jira_issue(story)
+
+        # jira_draft_agent = Agents().jira_ticket_agent()
+        # jira_ticket_task = Tasks().jira_ticket_task(jira_draft_agent, result)
 
         # jira_draft_agent = Agents().jira_draft_agent()
         # jira_draft_task = Tasks().jira_draft_task(jira_draft_agent, result)
 
         # jiracrew = Crew(agents=[jira_draft_agent],
-        #                 tasks=[jira_draft_task],
+        #                 tasks=[jira_ticket_task],
         #                 verbose=False)
         
         # jiracrew.kickoff()

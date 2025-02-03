@@ -2,13 +2,14 @@ import requests
 import re
 import json
 import base64
+import os
 
 
 # Define Jira URL and credentials
-JIRA_URL = 'https://akashdoke4.atlassian.net'
-API_TOKEN = 'ATATT3xFfGF0Un8kGpsSZCDS_hIJHFQ3hNeWPZMM-tWSalBBPkmMA9jSFt-fJ1j0ZTM37TpT-_ICB2cPS4vnoWtht_B0LNQh6CHakCU9z6eSe9FNQ33EEVdiOZ-UJiPp2WYzMRr1Q-1qVg0Fxnzvs_1m61uKtI-soUSotqLjZxiQrxGjzhTi0sk=4DDB8ECB'
-EMAIL = 'akashdoke4@gmail.com'
-PROJECT_KEY = 'SCRUM'
+JIRA_URL =  os.getenv('JIRA_URL')
+API_TOKEN = os.getenv('API_TOKEN')
+EMAIL = os.getenv('EMAIL')
+PROJECT_KEY = os.getenv('PROJECT_KEY')
 
 auth_header = base64.b64encode(f"{EMAIL}:{API_TOKEN}".encode()).decode()
 # Define headers for Jira API authentication
@@ -17,6 +18,47 @@ headers = {
     'Authorization': f"Basic {auth_header}",
     'Accept': 'application/json'
 }
+
+
+def parse_markdown_v2(markdown_text):
+    """
+    Parses markdown text to extract story title, description, and tasks.
+    """
+    parsed_data = {}
+    lines = markdown_text.split("\n")
+
+    # Extract Story Title
+    story_title_match = re.search(r"\*\*Story Title\*\*: (.+)", markdown_text)
+    if story_title_match:
+        parsed_data["story_title"] = story_title_match.group(1).strip()
+
+    # Extract Story Description
+    story_description_match = re.search(r"\*\*Story Description\*\*: (.+)", markdown_text)
+    if story_description_match:
+        parsed_data["story_description"] = story_description_match.group(1).strip()
+
+    # Extract Tasks and Sub-tasks
+    tasks = []
+    task_pattern = re.compile(r"- \*\*Task (\d+): (.+)\*\*")
+    sub_task_pattern = re.compile(r"\s*\* \*\*Sub-task (\d+\.\d+): (.+)\*\*")
+
+    current_task = None
+    for line in lines:
+        task_match = task_pattern.match(line)
+        if task_match:
+            if current_task:
+                tasks.append(current_task)
+            current_task = {"title": task_match.group(2).strip(), "sub_tasks": []}
+        else:
+            sub_task_match = sub_task_pattern.match(line)
+            if sub_task_match and current_task:
+                current_task["sub_tasks"].append(sub_task_match.group(2).strip())
+
+    if current_task:
+        tasks.append(current_task)
+
+    parsed_data["tasks"] = tasks
+    return parsed_data
 
 # Function to parse markdown into structured data
 def parse_markdown(markdown):
@@ -61,7 +103,7 @@ def create_jira_issue(story):
             "content": [
                 {
                     "type": "text",
-                    "text": story['description']
+                    "text": story['story_description']
                 }
             ]
         }
@@ -74,7 +116,7 @@ def create_jira_issue(story):
             "project": {
                 "key": PROJECT_KEY  # Replace with your Jira project key
             },
-            "summary": story['title'],
+            "summary": story['story_title'],
             "description": adf_description,
             "issuetype": {
                 "name": "Story"
@@ -90,15 +132,15 @@ def create_jira_issue(story):
         print("failed")
         print(e)
     
-    if response.status_code == 201:
-        story_id = response.json()['id']
-        print(f"Story created successfully with ID: {story_id}")
+    # if response.status_code == 201:
+    #     story_id = response.json()['id']
+    #     print(f"Story created successfully with ID: {story_id}")
         
-        # Create tasks and subtasks under the story
-        for task in story['tasks']:
-            create_jira_task(story_id, task)
-    else:
-        print(f"Error creating story: {response.content}")
+    #     # Create tasks and subtasks under the story
+    #     for task in story['tasks']:
+    #         create_jira_task(story_id, task)
+    # else:
+    #     print(f"Error creating story: {response.content}")
 
 # Function to create Jira task (sub-task)
 def create_jira_task(parent_issue_id, task):

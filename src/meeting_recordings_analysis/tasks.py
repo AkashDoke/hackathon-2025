@@ -144,7 +144,6 @@ class Tasks():
     Additionally, ensure that the story and tasks are logically connected to the content of the FAQ.
             """),
             expected_output=("""A well-structured Jira story with detailed tasks and sub-tasks based on the FAQ content. The story should provide a clear overview and actionable steps for implementation."""),
-            tools=[JiraCustomTool()],
             agent=agent,
         )
     
