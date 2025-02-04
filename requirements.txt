@@ -4,7 +4,6 @@ crewai
 crewai_tools
 agentops
 requests
-re
 base64
 carousel
 carousel-slider
