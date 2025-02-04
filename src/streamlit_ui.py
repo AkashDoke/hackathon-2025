@@ -10,7 +10,7 @@ print(os.getcwd())
 #sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 # Add the src/ directory to the Python path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from main import meeting_minutes_flow
+from meeting_recordings_analysis.main import meeting_minutes_flow
 
 # Initialize session state for navigation
 if "page" not in st.session_state:
@@ -28,7 +28,7 @@ st.set_page_config(page_title="Meeting Minutes Generator", layout="wide")
 
 # Get the directory where the script is located
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # This is "src/demo/"
-ASSETS_DIR = os.path.join(BASE_DIR, "assets")  # This is "src/demo/assets/"
+ASSETS_DIR = os.path.join(BASE_DIR, "meeting_recordings_analysis/assets")  # This is "src/demo/assets/"
 
 image_paths = {
     "one": os.path.join(ASSETS_DIR, "one.png"),

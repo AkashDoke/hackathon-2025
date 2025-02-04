@@ -6,8 +6,8 @@ import io
 
 from openai import OpenAI
 from pydantic import BaseModel
-from agents import agents
-from tasks import tasks
+# from agents import agents
+# from tasks import tasks
 from crewai import Crew , LLM
 from pydub import AudioSegment
 from pydub.utils import make_chunks
@@ -145,4 +145,4 @@ Transcription: Good afternoon, everyone, and welcome to FinTech Plus Sync's 2nd 
     #         return None
 
 # Create an instance of the flow
-#meeting_minutes_flow = MeetingMinutesFlow()
+meeting_minutes_flow = MeetingMinutesFlow()
