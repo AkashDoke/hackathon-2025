@@ -7,3 +7,4 @@ requests
 carousel
 streamlit_carousel
 msal
+sqlite3>=3.35.0
