@@ -6,8 +6,8 @@ import io
 
 from openai import OpenAI
 from pydantic import BaseModel
-from .agents import agents
-from .tasks import tasks
+from agents import agents
+from tasks import tasks
 from crewai import Crew , LLM
 from pydub import AudioSegment
 from pydub.utils import make_chunks
