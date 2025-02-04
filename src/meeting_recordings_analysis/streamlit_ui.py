@@ -9,7 +9,7 @@ import sys
 # Add the src directory to the Python path
 #sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from meeting_recordings_analysis.main import meeting_minutes_flow
+#from meeting_recordings_analysis.main import meeting_minutes_flow
 
 # Initialize session state for navigation
 if "page" not in st.session_state:
@@ -319,7 +319,7 @@ if st.session_state.page == "home":
             st.info("File uploaded successfully!")
 
             with st.spinner("Processing your file..."):
-                transcription = meeting_minutes_flow.transcribe_meeting(uploaded_file.read())
+                # transcription = meeting_minutes_flow.transcribe_meeting(uploaded_file.read())
                 st.success("Transcription Complete!")
                 st.text_area("Meeting Transcript", transcription, height=200)
 
