@@ -6,3 +6,4 @@ agentops
 requests
 carousel
 streamlit_carousel
+msal

@@ -4,6 +4,12 @@ from streamlit_carousel import carousel
 import streamlit.components.v1 as components
 import base64
 import os
+import sys
+
+# Add the src directory to the Python path
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from meeting_recordings_analysis.main import meeting_minutes_flow
 
 # Initialize session state for navigation
 if "page" not in st.session_state:
@@ -308,11 +314,15 @@ if st.session_state.page == "home":
     col1, col2 = st.columns([4, 8])
 
     with col1:
-        uploaded_file = st.file_uploader(
-            "Choose a file", type=["mp3", "wav", "mp4", "mov"], help="Limit 200MB")
+        uploaded_file = st.file_uploader("Choose a file", type=["mp3", "wav"])
         if uploaded_file:
             st.info("File uploaded successfully!")
-            transcription = "Dummy transcription text..."
+
+            with st.spinner("Processing your file..."):
+                transcription = meeting_minutes_flow.transcribe_meeting(uploaded_file.read())
+                st.success("Transcription Complete!")
+                st.text_area("Meeting Transcript", transcription, height=200)
+
 
     with col2:
         if uploaded_file:
