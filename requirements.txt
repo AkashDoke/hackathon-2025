@@ -7,3 +7,4 @@ requests
 carousel
 streamlit_carousel
 msal
+pysqlite3-binary
