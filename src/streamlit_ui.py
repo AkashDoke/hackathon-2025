@@ -1,29 +1,14 @@
 import logging
 import sqlite3
-
-# Configure logging
-logging.basicConfig(
-    format="%(asctime)s [%(levelname)s] - %(message)s",
-    level=logging.INFO,  # Change to DEBUG for more details
-    handlers=[
-        logging.FileHandler("streamlit_app.log"),  # Logs to a file
-        logging.StreamHandler()  # Logs to console
-    ]
-)
-
-# Logger instance
-logger = logging.getLogger(__name__)
-
-
 import os
 import urllib.request
 import zipfile
 import logging
-import sqlite3
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] - %(message)s")
 logger = logging.getLogger(__name__)
+
 
 # Define the new SQLite version
 SQLITE_VERSION = "3.42.0"  # Change this to the latest available version
