@@ -5,7 +5,7 @@ import streamlit.components.v1 as components
 import base64
 import os
 import sys
-
+print(os.getcwd()) 
 # Add the src directory to the Python path
 #sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
