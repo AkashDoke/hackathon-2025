@@ -6,3 +6,5 @@ agentops
 requests
 json
 re
+base64
+carousel
