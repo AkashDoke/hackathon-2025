@@ -8,3 +8,4 @@ json
 re
 base64
 carousel
+carousel-slider
