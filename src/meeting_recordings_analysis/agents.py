@@ -88,5 +88,5 @@ class Agents():
                 goal="""Take markdown input from another crew, send it to a tool as-is, and create a ticket.""",
                 backstory="""You are an expert in handling markdown inputs and integrating with ticketing systems.""",
                 tools=[JiraCustomTool()],  # Replace with the appropriate tool for interacting with Jira
-                llm=self.google_llm
+                llm=self.azure_llm
             )

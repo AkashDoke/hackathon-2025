@@ -19,6 +19,81 @@ headers = {
     'Accept': 'application/json'
 }
 
+def extract_story_and_tasks(llm_response):
+    """Extracts story title, description, and tasks from various formats."""
+    # Remove markdown code blocks if present
+    llm_response = re.sub(r'```[a-zA-Z]*\n|```', '', llm_response).strip()
+    
+    # Extract Story Title
+    title_match = re.search(r'\*\*Story Title\*\*:\s*(.+)', llm_response)
+    story_title = title_match.group(1).strip() if title_match else "Untitled Story"
+    
+    # Extract Story Description
+    desc_match = re.search(r'\*\*Story Description\*\*:\s*(.+)', llm_response, re.DOTALL)
+    story_description = desc_match.group(1).strip() if desc_match else "No Description Provided"
+    
+    # Extract Tasks
+    tasks = []
+    task_pattern = re.compile(
+        r'- Task \d+:\s*(.*?)\n'  # Task Name
+        r'\s*- Priority:\s*(.*?)\n'  # Priority
+        r'\s*- Assignee:\s*(.*?)\n'  # Assignee
+        r'\s*- Due Date:\s*(.*?)\n',  # Due Date
+        re.MULTILINE
+    )
+    
+    for match in task_pattern.finditer(llm_response):
+        task = {
+            "summary": match.group(1).strip(),
+            "priority": match.group(2).strip(),
+            "assignee": match.group(3).strip(),
+            "due_date": match.group(4).strip()
+        }
+        tasks.append(task)
+    
+    return story_title, story_description, tasks
+
+# Generic function to extract title and description
+def extract_title_and_description(response):
+    # Use regex to find the title and description
+    title_match = re.search(r"**Story Title:**\s*(.*)", response)
+    description_match = re.search(r"**Story Description:**\s*(.*)", response)
+    
+    # Extract the title and description if matches are found
+    title = title_match.group(1).strip() if title_match else None
+    description = description_match.group(1).strip() if description_match else None
+    
+    return title, description
+
+def parse_llm_response(response):
+    lines = response.strip().split('\n')
+    story_title = lines[0].replace("Story Title: ", "").strip()
+    story_description = lines[2].replace("Story Description: ", "").strip()
+    
+    tasks = []
+    current_task = {}
+    
+    for line in lines[4:]:
+        if line.strip().startswith("- Task"):
+            if current_task:
+                tasks.append(current_task)
+            current_task = {
+                "summary": line.split(": ")[1].strip(),
+                "priority": None,
+                "assignee": None,
+                "due_date": None
+            }
+        elif "Priority:" in line:
+            current_task["priority"] = line.split(": ")[1].strip()
+        elif "Assignee:" in line:
+            current_task["assignee"] = line.split(": ")[1].strip()
+        elif "Due Date:" in line:
+            current_task["due_date"] = line.split(": ")[1].strip()
+    
+    if current_task:
+        tasks.append(current_task)
+    
+    return story_title, story_description, tasks
 
 def parse_markdown_v2(markdown_text):
     """
@@ -39,7 +114,7 @@ def parse_markdown_v2(markdown_text):
 
     # Extract Tasks and Sub-tasks
     tasks = []
-    task_pattern = re.compile(r"- \*\*Task (\d+): (.+)\*\*")
+    task_pattern = re.compile(r"- \*\*Tasks (\d+): (.+)\*\*")
     sub_task_pattern = re.compile(r"\s*\* \*\*Sub-task (\d+\.\d+): (.+)\*\*")
 
     current_task = None
@@ -75,20 +150,41 @@ def parse_markdown(markdown):
     if desc_match:
         story['description'] = desc_match.group(1)
 
-    # Extract tasks
     tasks = []
-    task_matches = re.findall(r'- \*\*(.*?): (.*?)\*\*\s*- \*\*Priority\*\*: (.*?)\s*- \*\*Assignee\*\*: (.*?)\s*- \*\*Due Date\*\*: (.*?)\s*- \*\*Sub-tasks\*\*:\s*([\s\S]*?)(?=- \*\*Task \d)', markdown)
-    for task_match in task_matches:
-        task = {
-            'title': task_match[1],
-            'priority': task_match[2],
-            'assignee': task_match[3],
-            'due_date': task_match[4],
-            'subtasks': [subtask.strip() for subtask in task_match[5].strip().split('\n')]
-        }
-        tasks.append(task)
+    task_pattern = re.compile(r"- \*\*Tasks (\d+): (.+)\*\*")
+    sub_task_pattern = re.compile(r"\s*\* \*\*Sub-task (\d+\.\d+): (.+)\*\*")
 
-    story['tasks'] = tasks
+    current_task = None
+    for line in lines:
+        task_match = task_pattern.match(line)
+        if task_match:
+            if current_task:
+                tasks.append(current_task)
+            current_task = {"title": task_match.group(2).strip(), "sub_tasks": []}
+        else:
+            sub_task_match = sub_task_pattern.match(line)
+            if sub_task_match and current_task:
+                current_task["sub_tasks"].append(sub_task_match.group(2).strip())
+
+    if current_task:
+        tasks.append(current_task)
+
+    story["tasks"] = tasks
+
+    # # Extract tasks
+    # tasks = []
+    # task_matches = re.findall(r'- \*\*(.*?): (.*?)\*\*\s*- \*\*Priority\*\*: (.*?)\s*- \*\*Assignee\*\*: (.*?)\s*- \*\*Due Date\*\*: (.*?)\s*- \*\*Sub-tasks\*\*:\s*([\s\S]*?)(?=- \*\*Task \d)', markdown)
+    # for task_match in task_matches:
+    #     task = {
+    #         'title': task_match[1],
+    #         'priority': task_match[2],
+    #         'assignee': task_match[3],
+    #         'due_date': task_match[4],
+    #         'subtasks': [subtask.strip() for subtask in task_match[5].strip().split('\n')]
+    #     }
+    #     tasks.append(task)
+
+    # story['tasks'] = tasks
     return story
 
 # Function to create Jira issue (story)

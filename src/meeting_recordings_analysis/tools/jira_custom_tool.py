@@ -1,7 +1,7 @@
 from crewai.tools import BaseTool
 from typing import Type
 from pydantic import BaseModel, Field
-from meeting_recordings_analysis.jira.utils import parse_markdown, create_jira_issue, parse_markdown_v2
+from meeting_recordings_analysis.jira.utils import parse_markdown, create_jira_issue, parse_markdown_v2, parse_llm_response, extract_story_and_tasks
 
 
 class JiraCustomToolInput(BaseModel):
@@ -19,9 +19,15 @@ class JiraCustomTool(BaseTool):
     def _run(self, body: str) -> str:
 
         trimmed_markdown = body.strip("```").strip()
-        print("trimmed_markdown", trimmed_markdown)
-        story = parse_markdown_v2(trimmed_markdown)
-        print("story", story)
+
+        story_title, story_description, tasks = extract_story_and_tasks(trimmed_markdown)
+        print("story_title", story_title)
+        print("story_description" , story_description)
+        print("tasks", tasks)
+
+        # print("trimmed_markdown", trimmed_markdown)
+        # story = parse_markdown(trimmed_markdown)
+        # print("story", story)
 
         #create_jira_issue(story)
         return "this is an example of a tool output, ignore it and move along."
