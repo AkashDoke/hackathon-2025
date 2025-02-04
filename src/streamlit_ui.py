@@ -9,7 +9,9 @@ print(os.getcwd())
 # Add the src directory to the Python path
 #sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 # Add the src/ directory to the Python path
-sys.path.append("src")
+print(sys.path)
+print(os.path.abspath)
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from meeting_recordings_analysis.main import meeting_minutes_flow
 
 # Initialize session state for navigation
