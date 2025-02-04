@@ -11,7 +11,7 @@ sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
 # Add the src directory to the Python path
 #sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 # Add the src/ directory to the Python path
-from src.meeting_recordings_analysis.main import meeting_minutes_flow
+from meeting_recordings_analysis.main import meeting_minutes_flow
 
 # Initialize session state for navigation
 if "page" not in st.session_state:
