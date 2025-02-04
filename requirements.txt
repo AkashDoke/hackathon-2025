@@ -5,5 +5,4 @@ crewai_tools
 agentops
 requests
 carousel
-carousel-slider
 streamlit_carousel
