@@ -161,6 +161,9 @@ header_html = f"""
         color: #fff !important;
         border-color: #009cdb !important;
     }}
+    .st-emotion-cache-ocsh0s{{
+    background-color: #009cdb;
+    }}
 
     .stColumn.st-emotion-cache-1h3k0y3.eiemyj2 {{
         position: relative;
@@ -285,6 +288,9 @@ st.markdown("""
     .st-emotion-cache-1104ytp.e121c1cl0 {
         margin-bottom: -5px;
     }
+    .st-emotion-cache-1104ytp a {
+        text-decoration: none;        
+    }
 </style>
 
 """, unsafe_allow_html=True)
@@ -305,7 +311,7 @@ if st.session_state.page == "home":
         {"title": "Real-time Transcription", "text": "Get accurate transcriptions instantly.",
             "img": f"data:image/png;base64,{encoded_images['two']}"},
         {"title": "Summarization", "text": "Generate concise summaries with AI.",
-            "img":f"data:image/png;base64,{encoded_images['one']}"},
+            "img": f"data:image/png;base64,{encoded_images['one']}"},
         {"title": "Collaboration", "text": "Share and collaborate on meeting notes effortlessly.",
             "img": f"data:image/png;base64,{encoded_images['two']}"}
     ]
