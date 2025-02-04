@@ -7,3 +7,4 @@ requests
 carousel
 streamlit_carousel
 msal
+meeting_recordings_analysis
