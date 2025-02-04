@@ -11,8 +11,12 @@ file_writer_faq = FileWriterTool(file_name='faq.txt', directory='hackathon-2025'
 class Agents():
 
     def __init__(self):
+      self.groq_llm = LLM(model="groq/deepseek-r1-distill-llama-70b-specdec",
+        api_key="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")
       self.google_llm = LLM( model=os.getenv("GEMINI_MODEL"),
-        api_key=os.getenv("GEMINI_API_KEY")),
+        api_key=os.getenv("GEMINI_API_KEY"))
+      self.deepseek_llm = LLM(base_url="https://openrouter.ai/api/v1", model="deepseek/deepseek-r1:free",
+        api_key="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")
       self.azure_llm = LLM( model='azure/gpt-4o-mini',
                 base_url='https://prasa-m6jgverq-eastus2.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-15-preview',
 		api_key="4CAjxJRE4DzhhGdSTcDGj2inIkTFt3T9XqBrjVZiGDz6NaprvrUyJQQJ99BAACHYHv6XJ3w3AAAAACOGiLz5")
@@ -41,7 +45,7 @@ class Agents():
             goal="""Create detailed and clear FAQ entries based on the questions, answers, and common concerns provided from various sources. Organize the information into a coherent and accessible FAQ format.""",
             backstory= """You are an expert writer with a knack for explaining complex topics in simple and understandable terms. 
     Your task is to take the questions asked and the answers provided to create an FAQ document that addresses the most common queries in a way that is clear, concise, and informative.""",
-            llm=self.azure_llm,
+            llm=self.groq_llm,
             tools=[file_writer_faq]
             )
     
@@ -50,7 +54,7 @@ class Agents():
             role="CrewAI Jira Story Creator",
             goal="""Transform FAQ content into a well-structured Jira story, breaking it down into actionable tasks and sub-tasks. Ensure each task is clear, achievable, and mapped to the context of the FAQ.""",
             backstory= """You are an experienced project manager with a deep understanding of agile workflows. Your task is to take the FAQ content provided and extract key tasks that align with the overall goals. You will then create a Jira story that reflects the broader project, detailing the necessary tasks with proper assignees, due dates, and priorities. Your work ensures that each task derived from the FAQ is actionable and serves as a step toward achieving the larger goal.""",
-            llm=self.azure_llm,
+            llm=self.groq_llm,
             tools=[JiraCustomTool()]
             )
     

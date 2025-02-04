@@ -19,15 +19,9 @@ class JiraCustomTool(BaseTool):
     def _run(self, body: str) -> str:
 
         trimmed_markdown = body.strip("```").strip()
-
-        story_title, story_description, tasks = extract_story_and_tasks(trimmed_markdown)
-        print("story_title", story_title)
-        print("story_description" , story_description)
-        print("tasks", tasks)
-
-        # print("trimmed_markdown", trimmed_markdown)
-        # story = parse_markdown(trimmed_markdown)
-        # print("story", story)
-
-        #create_jira_issue(story)
+        print("trimmed_markdown", trimmed_markdown)
+        story = parse_markdown(trimmed_markdown)
+        print("story", story)
+        create_jira_issue(story)
+        print("success createing stroy")
         return "this is an example of a tool output, ignore it and move along."

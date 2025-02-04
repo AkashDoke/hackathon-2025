@@ -123,56 +123,29 @@ Transcription: Good afternoon, everyone, and welcome to FinTech Plus Sync's 2nd 
         return result
     
     def generate_meeting_minutes_jira_tasks(self):
-        summarizer_jira_agent = Agents().summarizer_jira_agent()
-        summarizer_jira_agent_task = Tasks().summarizer_jira_agent_task(summarizer_jira_agent, self.state.transcript)
+        try:
+            summarizer_jira_agent = Agents().summarizer_jira_agent()
+            summarizer_jira_agent_task = Tasks().summarizer_jira_agent_task(summarizer_jira_agent, self.state.transcript)
 
-        crew = Crew(agents=[summarizer_jira_agent],
+            crew = Crew(agents=[summarizer_jira_agent],
                         tasks=[summarizer_jira_agent_task],
                         verbose=False)
-        
-        result = crew.kickoff()
 
+            # Wait for kickoff to complete successfully
+            result = crew.kickoff()
 
-        jira_ticket_agent = Agents().jira_ticket_agent()
-        jira_draft_task = Tasks().jira_draft_task(jira_ticket_agent, result)
+            # Check if result is valid or success before continuing
+            if result is not None and result != "":  # Customize this based on how you determine success
+                trimmed_markdown = str(result).strip("```").strip()
+                story = parse_markdown(trimmed_markdown)
+                print(story)
+                create_jira_issue(story)
+            else:
+                print("Kickoff did not complete successfully. Skipping subsequent steps.")
+            return result
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            return None
 
-
-        jiracrew = Crew(agents=[jira_ticket_agent],
-                        tasks=[jira_draft_task],
-                        verbose=False)
-        
-        jiracrewresult = jiracrew.kickoff()
-        print(jiracrewresult)
-
-        # self.meeting_minutes_jira_tasks = result
-        # trimmed_markdown = str(result).strip("```").strip()
-        # story = parse_markdown_v2(trimmed_markdown)
-        # create_jira_issue(story)
-        # trimmed_markdown:str = self.meeting_minutes_jira_tasks
-        # story = parse_markdown(trimmed_markdown)
-        # print(story)
-        # create_jira_issue(story)
-
-        # jira_draft_agent = Agents().jira_ticket_agent()
-        # jira_ticket_task = Tasks().jira_ticket_task(jira_draft_agent, result)
-
-        # jira_draft_agent = Agents().jira_draft_agent()
-        # jira_draft_task = Tasks().jira_draft_task(jira_draft_agent, result)
-
-        # jiracrew = Crew(agents=[jira_draft_agent],
-        #                 tasks=[jira_ticket_task],
-        #                 verbose=False)
-        
-        # jiracrew.kickoff()
-
-        return result
-    
-    # def generate_jira_task(self):
-    #     trimmed_markdown = self.meeting_minutes_jira_tasks.strip("```").strip()
-    #     story = parse_markdown(trimmed_markdown)
-    #     create_jira_issue(story)
-    #     print(story)
-    #     return story
-    
 # Create an instance of the flow
 meeting_minutes_flow = MeetingMinutesFlow()
