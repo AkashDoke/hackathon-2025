@@ -9,7 +9,7 @@ import sys
 # Add the src directory to the Python path
 #sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from .main import meeting_minutes_flow
+from main import meeting_minutes_flow
 
 # Initialize session state for navigation
 if "page" not in st.session_state:
