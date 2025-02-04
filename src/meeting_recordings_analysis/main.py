@@ -6,8 +6,8 @@ import io
 
 from openai import OpenAI
 from pydantic import BaseModel
-from meeting_recordings_analysis.agents import Agents
-from meeting_recordings_analysis.tasks import Tasks
+from .agents import agents
+from .tasks import tasks
 from crewai import Crew , LLM
 from pydub import AudioSegment
 from pydub.utils import make_chunks
@@ -74,78 +74,75 @@ Transcription: Good afternoon, everyone, and welcome to FinTech Plus Sync's 2nd 
         self.state.transcript = full_transcription
         return full_transcription
 
-    def generate_summary(self):
+    # def generate_summary(self):
+    #     summarize_agent = agents.summarizer_agent()     
+    #     summarize_agent_task = tasks.summarizer_agent_task(summarize_agent, self.state.transcript)
 
-        agent = Agents()
+    #     meeting_minutes_writer = agents.meeting_minutes_writer()
+    #     meeting_minutes_writer_task = tasks.meeting_minutes_writing_task(meeting_minutes_writer)
 
-        summarize_agent = agent.summarizer_agent()     
-        summarize_agent_task = Tasks().summarizer_agent_task(summarize_agent, self.state.transcript)
-
-        meeting_minutes_writer = agent.meeting_minutes_writer()
-        meeting_minutes_writer_task = Tasks().meeting_minutes_writing_task(meeting_minutes_writer)
-
-        crew = Crew(agents=[summarize_agent, meeting_minutes_writer],
-                        tasks=[summarize_agent_task, meeting_minutes_writer_task],
-                        verbose=False)
-        result = crew.kickoff()
-        self.meeting_minutes = result
+    #     crew = Crew(agents=[summarize_agent, meeting_minutes_writer],
+    #                     tasks=[summarize_agent_task, meeting_minutes_writer_task],
+    #                     verbose=False)
+    #     result = crew.kickoff()
+    #     self.meeting_minutes = result
 
         
-        gmail_draft_agent = agent.gmail_draft_agent()
-        gmail_draft_task = Tasks().gmail_draft_task(gmail_draft_agent, result)
+    #     gmail_draft_agent = agent.gmail_draft_agent()
+    #     gmail_draft_task = Tasks().gmail_draft_task(gmail_draft_agent, result)
 
-        gmailcrew = Crew(agents=[gmail_draft_agent],
-                        tasks=[gmail_draft_task],
-                        verbose=False)
-        gmailcrew.kickoff()
+    #     gmailcrew = Crew(agents=[gmail_draft_agent],
+    #                     tasks=[gmail_draft_task],
+    #                     verbose=False)
+    #     gmailcrew.kickoff()
 
-        return result
+    #     return result
 
-    def generate_meeting_minutes_faq(self):
-        summarize_faq_agent = Agents().summarizer_faq_agent()
-        summarize_faq_agent_task = Tasks().summarizer_faq_agent_task(summarize_faq_agent, self.state.transcript)
+    # def generate_meeting_minutes_faq(self):
+    #     summarize_faq_agent = Agents().summarizer_faq_agent()
+    #     summarize_faq_agent_task = Tasks().summarizer_faq_agent_task(summarize_faq_agent, self.state.transcript)
 
-        crew = Crew(agents=[summarize_faq_agent],
-                        tasks=[summarize_faq_agent_task],
-                        verbose=False)
+    #     crew = Crew(agents=[summarize_faq_agent],
+    #                     tasks=[summarize_faq_agent_task],
+    #                     verbose=False)
         
-        result = crew.kickoff()
-        self.meeting_minutes_faq = result
+    #     result = crew.kickoff()
+    #     self.meeting_minutes_faq = result
 
-        slack_draft_agent = Agents().slack_draft_agent()
-        slack_draft_task = Tasks().slack_draft_task(slack_draft_agent, result)
-        slackcrew = Crew(agents=[slack_draft_agent],
-                        tasks=[slack_draft_task],
-                        verbose=False)
+    #     slack_draft_agent = Agents().slack_draft_agent()
+    #     slack_draft_task = Tasks().slack_draft_task(slack_draft_agent, result)
+    #     slackcrew = Crew(agents=[slack_draft_agent],
+    #                     tasks=[slack_draft_task],
+    #                     verbose=False)
         
-        slackcrew.kickoff()
+    #     slackcrew.kickoff()
 
-        return result
+    #     return result
     
-    def generate_meeting_minutes_jira_tasks(self):
-        try:
-            summarizer_jira_agent = Agents().summarizer_jira_agent()
-            summarizer_jira_agent_task = Tasks().summarizer_jira_agent_task(summarizer_jira_agent, self.state.transcript)
+    # def generate_meeting_minutes_jira_tasks(self):
+    #     try:
+    #         summarizer_jira_agent = Agents().summarizer_jira_agent()
+    #         summarizer_jira_agent_task = Tasks().summarizer_jira_agent_task(summarizer_jira_agent, self.state.transcript)
 
-            crew = Crew(agents=[summarizer_jira_agent],
-                        tasks=[summarizer_jira_agent_task],
-                        verbose=False)
+    #         crew = Crew(agents=[summarizer_jira_agent],
+    #                     tasks=[summarizer_jira_agent_task],
+    #                     verbose=False)
 
-            # Wait for kickoff to complete successfully
-            result = crew.kickoff()
+    #         # Wait for kickoff to complete successfully
+    #         result = crew.kickoff()
 
-            # Check if result is valid or success before continuing
-            if result is not None and result != "":  # Customize this based on how you determine success
-                trimmed_markdown = str(result).strip("```").strip()
-                story = parse_markdown(trimmed_markdown)
-                print(story)
-                create_jira_issue(story)
-            else:
-                print("Kickoff did not complete successfully. Skipping subsequent steps.")
-            return result
-        except Exception as e:
-            print(f"An error occurred: {e}")
-            return None
+    #         # Check if result is valid or success before continuing
+    #         if result is not None and result != "":  # Customize this based on how you determine success
+    #             trimmed_markdown = str(result).strip("```").strip()
+    #             story = parse_markdown(trimmed_markdown)
+    #             print(story)
+    #             create_jira_issue(story)
+    #         else:
+    #             print("Kickoff did not complete successfully. Skipping subsequent steps.")
+    #         return result
+    #     except Exception as e:
+    #         print(f"An error occurred: {e}")
+    #         return None
 
 # Create an instance of the flow
 meeting_minutes_flow = MeetingMinutesFlow()

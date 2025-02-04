@@ -73,3 +73,5 @@ class Tasks():
             expected_output=("""A well-structured Jira story with detailed tasks and sub-tasks based on the FAQ content. The story should provide a clear overview and actionable steps for implementation."""),
             agent=agent,
         )
+    
+tasks = Tasks() 

@@ -94,3 +94,6 @@ class Agents():
                 tools=[JiraCustomTool()],  # Replace with the appropriate tool for interacting with Jira
                 llm=self.azure_llm
             )
+    
+# Create an instance of the flow
+agents = Agents()    
