@@ -3,6 +3,7 @@ from streamlit.components.v1 import html
 from streamlit_carousel import carousel
 import streamlit.components.v1 as components
 import base64
+import os
 
 # Initialize session state for navigation
 if "page" not in st.session_state:
@@ -18,16 +19,19 @@ st.set_page_config(page_title="Meeting Minutes Generator", layout="wide")
 
 # Custom logo path
 
-image_paths = {
-    "one": "./assets/one.png",
-    "two": "./assets/two.png",
-    "LOGO_PATH": "./assets/logo.png",
-    "Abhi": "./assets/Abhi.png",
-    "akash": "./assets/akash.png",
-    "ankita": "./assets/ankita.png",
-    "dharmik": "./assets/dharmik.png",
-}
+# Get the directory where the script is located
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # This is "src/demo/"
+ASSETS_DIR = os.path.join(BASE_DIR, "assets")  # This is "src/demo/assets/"
 
+image_paths = {
+    "one": os.path.join(ASSETS_DIR, "one.png"),
+    "two": os.path.join(ASSETS_DIR, "two.png"),
+    "LOGO_PATH": os.path.join(ASSETS_DIR, "logo.png"),
+    "Abhi": os.path.join(ASSETS_DIR, "Abhi.png"),
+    "akash": os.path.join(ASSETS_DIR, "akash.png"),
+    "ankita": os.path.join(ASSETS_DIR, "ankita.png"),
+    "dharmik": os.path.join(ASSETS_DIR, "dharmik.png"),
+}
 # Function to encode images to base64
 
 
@@ -39,6 +43,8 @@ def image_to_base64(image_path):
 # Encode images
 encoded_images = {name: image_to_base64(path)
                   for name, path in image_paths.items()}
+
+print("LOGO_PATH", image_paths['LOGO_PATH'])
 
 # Custom Header with Logo
 header_html = f"""
@@ -286,13 +292,13 @@ if st.session_state.page == "home":
 
     carousel_items = [
         {"title": "Ollama: llm model", "text": "AI-powered solutions for meeting minutes and transcription.",
-            "img": "./assets/one.png"},
+            "img": f"data:image/png;base64,{encoded_images['one']}"},
         {"title": "Real-time Transcription", "text": "Get accurate transcriptions instantly.",
-            "img": "./assets/two.png"},
+            "img": f"data:image/png;base64,{encoded_images['two']}"},
         {"title": "Summarization", "text": "Generate concise summaries with AI.",
-            "img": "./assets/one.png"},
+            "img":f"data:image/png;base64,{encoded_images['one']}"},
         {"title": "Collaboration", "text": "Share and collaborate on meeting notes effortlessly.",
-            "img": "./assets/two.png"}
+            "img": f"data:image/png;base64,{encoded_images['two']}"}
     ]
     carousel(items=carousel_items)
 

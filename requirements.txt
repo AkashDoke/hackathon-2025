@@ -9,3 +9,4 @@ re
 base64
 carousel
 carousel-slider
+streamlit_carousel
