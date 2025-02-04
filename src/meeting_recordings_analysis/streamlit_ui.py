@@ -7,7 +7,7 @@ import os
 import sys
 
 # Add the src directory to the Python path
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+#sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from meeting_recordings_analysis.main import meeting_minutes_flow
 
