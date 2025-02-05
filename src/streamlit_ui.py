@@ -5,13 +5,16 @@ import streamlit.components.v1 as components
 import base64
 import os
 import sys
-__import__('pysqlite3')
-import sys
-sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
+
+
+# __import__('pysqlite3')
+# import sys
+# sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
 # Add the src directory to the Python path
-#sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 # Add the src/ directory to the Python path
-from meeting_recordings_analysis.main import meeting_minutes_flow
+#from meeting_recordings_analysis.main import meeting_minutes_flow
+
 
 # Initialize session state for navigation
 if "page" not in st.session_state:
@@ -316,28 +319,39 @@ if st.session_state.page == "home":
     ]
     carousel(items=carousel_items)
 
-    st.write("---")
-    st.header("Upload Your Meeting Audio File")
+import streamlit as st
 
-    col1, col2 = st.columns([4, 8])
+st.write("---")
+st.header("Upload Your Meeting Audio File")
 
-    with col1:
-        uploaded_file = st.file_uploader("Choose a file", type=["mp3", "wav"])
-        if uploaded_file:
-            st.info("File uploaded successfully!")
+col1, col2 = st.columns([4, 8])
 
-            with st.spinner("Processing your file..."):
-                transcription = meeting_minutes_flow.transcribe_meeting(uploaded_file.read())
-                st.success("Transcription Complete!")
-                st.text_area("Meeting Transcript", transcription, height=200)
+uploaded_file = None
+transcription = ""
 
+with col1:
+    uploaded_file = st.file_uploader("Choose a file", type=["mp3", "wav"])
+    
+    if uploaded_file:
+        st.info("File uploaded successfully!")
 
-    with col2:
-        if uploaded_file:
-            st.text_area("Meeting Transcript", transcription, height=400)
-            st.success("Transcription Complete!")
+        with col2: 
+            st.spinner("Processing your file...")
+            # Simulating transcription process
+            transcription = "This is a sample transcription of your meeting."
 
-    st.write("### Actions")
+            st.text_area("Meeting Transcript", transcription, height=200)
+            st.success("Transcription Complete!")   
+    else:
+        # AI-related content when no file is uploaded
+        with col2:
+            st.write("🤖 **Did you know?** AI-powered transcription tools use Natural Language Processing (NLP) and Speech Recognition to convert speech into text accurately.")
+            st.write("🎙️ Upload an audio file to see AI in action!")
+            st.image("https://t3.ftcdn.net/jpg/05/59/87/12/360_F_559871209_pbXlOVArUal3mk6Ce60JuP13kmuIRCth.jpg", width=300)
+
+# Show Actions section only if a file is uploaded
+if uploaded_file:
+    st.write("🚀 Actions")
     col1, col2, col3 = st.columns(3)
 
     with col1:
