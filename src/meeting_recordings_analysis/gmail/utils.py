@@ -108,9 +108,33 @@ def create_draft(service, user_id, message_body):
     """
     try:
         draft = service.users().drafts().create(userId=user_id, body={'message': message_body}).execute()
-        #draft = service.users().messages().send(userId=user_id, body={'raw': message_body}).execute()
         print(f'Draft id: {draft["id"]}\nDraft message: {draft["message"]}')
         return draft
     except Exception as error:
         print(f'An error occurred: {error}')
         return None
+    
+def send_email(service, user_id, message_body):
+    """
+    Send an email using the Gmail API.
+
+    Args:
+        service: Authorized Gmail API service instance.
+        user_id: User's email address. The special value "me"
+                 can be used to indicate the authenticated user.
+        to: Recipient's email address.
+        subject: Subject of the email.
+        body_text: Body text of the email.
+
+    Returns:
+        The sent message.
+    """
+    try:
+        # Send the message
+        sent_message = service.users().messages().send(userId=user_id, body=message_body).execute()
+
+        print(f'Message Id: {sent_message["id"]}')
+        return sent_message
+    except Exception as error:
+        print(f'An error occurred: {error}')
+        return None    
