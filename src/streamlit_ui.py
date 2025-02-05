@@ -7,13 +7,13 @@ import os
 import sys
 
 
-# __import__('pysqlite3')
-# import sys
-# sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
+__import__('pysqlite3')
+import sys
+sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
 # Add the src directory to the Python path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 # Add the src/ directory to the Python path
-#from meeting_recordings_analysis.main import meeting_minutes_flow
+from meeting_recordings_analysis.main import meeting_minutes_flow
 
 
 # Initialize session state for navigation
@@ -338,8 +338,8 @@ with col1:
         with col2: 
             st.spinner("Processing your file...")
             # Simulating transcription process
-            transcription = "This is a sample transcription of your meeting."
-
+            transcription = meeting_minutes_flow.transcribe_meeting(uploaded_file.read())
+            st.success("Transcription Complete!")
             st.text_area("Meeting Transcript", transcription, height=200)
             st.success("Transcription Complete!")   
     else:
@@ -355,16 +355,37 @@ if uploaded_file:
     col1, col2, col3 = st.columns(3)
 
     with col1:
-        with st.expander("📄 Summary"):
-            st.write("This is the summary section.")
+        with st.expander("📄 Summary", expanded=False):
+            if st.session_state.get("summary_open", False):  # Check if the expander was opened
+                st.spinner("Generating summary...")
+                summary = meeting_minutes_flow.generate_summary()
+                st.success("Summary Generated!")
+                st.text_area("Summary", summary, height=200)
+
+            else:
+                st.session_state["summary_open"] = True  # Set the session state when expander is opened
 
     with col2:
-        with st.expander("📚 FAQ"):
-            st.write("This is the FAQ section.")
+        with st.expander("📚 FAQ", expanded=False):
+            if st.session_state.get("faq_open", False):  # Check if the expander was opened
+                st.spinner("Generating FAQ...")
+                faq = meeting_minutes_flow.generate_meeting_minutes_faq()
+                st.success("FAQ Generated!")
+                st.text_area("FAQ", faq, height=200)
+
+            else:
+                st.session_state["faq_open"] = True  # Set the session state when expander is opened
 
     with col3:
-        with st.expander("📝 Create Task"):
-            st.write("This is the create task section.")
+        with st.expander("📝 Create Task", expanded=False):
+            if st.session_state.get("tasks_open", False):  # Check if the expander was opened
+                st.spinner("Generating tasks...")
+                tasks = meeting_minutes_flow.generate_meeting_minutes_jira_tasks()
+                st.success("Tasks Generated!")
+                st.text_area("Tasks", tasks, height=200)
+
+            else:
+                st.session_state["tasks_open"] = True  # Set the session state when expander is opened
 
 elif st.session_state.page == "ourteam":
     st.markdown("<h2>Meet our awesome team at Arieotech!</h2>",
