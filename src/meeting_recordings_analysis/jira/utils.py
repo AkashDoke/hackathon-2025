@@ -6,12 +6,15 @@ import os
 
 
 # Define Jira URL and credentials
+JIRA_DOMAIN =  os.getenv('JIRA_DOMAIN')
 JIRA_URL =  os.getenv('JIRA_URL')
 API_TOKEN = os.getenv('API_TOKEN')
 EMAIL = os.getenv('EMAIL')
 PROJECT_KEY = os.getenv('PROJECT_KEY')
 SPRINT_ID = 1
+BOARD_ID = 1
 EPIC_KEY = "10029"
+JIRA_API_BASE_URL = f'https://{JIRA_DOMAIN}/rest/agile/1.0'
 
 auth_header = base64.b64encode(f"{EMAIL}:{API_TOKEN}".encode()).decode()
 # Define headers for Jira API authentication
@@ -180,14 +183,15 @@ def send_jira_request(payload):
         print(f"Request failed: {e}")
         return None
 
-def add_to_sprint(issue_id):
+def add_to_sprint(sprint_id, issue_id):
     """Helper function to add an issue (story or task) to a sprint."""
     add_to_sprint_data = {
-        "issues": [issue_id]
+        "issues": issue_id
     }
     sprint_url = f"{JIRA_URL}/rest/agile/1.0/sprint/{SPRINT_ID}/issue"
     try:
         sprint_response = requests.post(sprint_url, headers=headers, data=json.dumps(add_to_sprint_data))
+        print(f"Added {issue_id} for sprint {sprint_id}")
         sprint_response.raise_for_status()
         return sprint_response
     except requests.exceptions.RequestException as e:
@@ -212,6 +216,25 @@ def create_adf_description(text):
         ]
     }
 
+def get_active_sprint_id():
+    # Fetch active sprints for the board
+    url = f'{JIRA_API_BASE_URL}/board/{BOARD_ID}/sprint?state=active'
+    try:
+        response = requests.get(url, headers=headers)
+        response.raise_for_status()  # Raise an exception for HTTP errors
+        sprints = response.json().get('values', [])
+        if sprints:
+            return sprints[0]['id']  # Assuming the first active sprint is the current one
+        else:
+            print('No active sprints found.')
+            return None
+    except requests.exceptions.HTTPError as http_err:
+        print(f'HTTP error occurred: {http_err}')  # HTTP error
+    except Exception as err:
+        print(f'Other error occurred: {err}')  # Other errors
+    return None
+    
+
 def create_jira_issue(story):
     """Function to create a Jira issue (story)."""
     adf_description = create_adf_description(story['description'])
@@ -227,20 +250,12 @@ def create_jira_issue(story):
 
     response = send_jira_request(payload)
     if response and response.status_code == 201:
-        story_id = response.json()['id']
-        print(f"Story created successfully with ID: {story_id}")
-
-        sprint_response = add_to_sprint(story_id)
-        if sprint_response and sprint_response.status_code == 204:
-            print(f"Issue {story_id} added to sprint {SPRINT_ID} successfully.")
-            for task in story['tasks']:
-                create_jira_task(story_id, task)
-        else:
-            print(f"Failed to add issue to sprint: {sprint_response.status_code} - {sprint_response.text}")
+        return response.json()['id']
     else:
         print(f"Error creating story: {response.content if response else 'No response'}")
+        return None
 
-def create_jira_task(parent_issue_id, task):
+def create_jira_task(task):
     """Function to create a Jira task (sub-task)."""
     adf_description = create_adf_description(task['title'])
     
@@ -254,71 +269,10 @@ def create_jira_task(parent_issue_id, task):
     }
 
     response = send_jira_request(payload)
-    if response and response.status_code == 201:
-        task_id = response.json()['id']
+    if response and response.status_code == 201: 
+        task_id = response.json()['id']          
         print(f"Task created successfully: {task['title']} (ID: {task_id})")
-
-        sprint_response = add_to_sprint(task_id)
-        if sprint_response and sprint_response.status_code == 204:
-            print(f"Issue {task_id} added to sprint {SPRINT_ID} successfully.")
-        else:
-            print(f"Failed to add issue to sprint: {sprint_response.status_code} - {sprint_response.text}")
-    else:
-        print(f"Error creating task: {response.content if response else 'No response'}")
-    adf_description = {
-        "version": 1,
-        "type": "doc",
-        "content": [
-            {
-                "type": "paragraph",
-                "content": [
-                    {
-                        "type": "text",
-                        "text": task['title']
-                    }
-                ]
-            }
-        ]
-    }
-        
-    payload = {
-        "fields": {
-            "project": {
-                "key": PROJECT_KEY  # Replace with your Jira project key
-            },
-            "summary": task['title'],
-            "description": adf_description,
-            "issuetype": {
-                "name": "Task"
-            }
-        }
-    }
-
-    response = requests.post(f'{JIRA_URL}/rest/api/3/issue', headers=headers, json=payload)
-    print(response.status_code, response.text, response)
-
-    if response.status_code == 201:
-        print(f"Task created successfully: {task['title']}")
-        task_id = response.json()['id']
-        print(f"Task created successfully with ID: {task_id}")
-        
-
-        ADD_TO_SPRINT_URL = f"{JIRA_URL}/rest/agile/1.0/sprint/{SPRINT_ID}/issue"
-        add_to_sprint_data = {
-            "issues": [task_id]
-        }
-
-        sprint_response = requests.post(
-            ADD_TO_SPRINT_URL,
-            headers=headers,
-            data=json.dumps(add_to_sprint_data)
-        )
-
-        if sprint_response.status_code == 204:   
-             print(f"Issue {task_id} added to sprint {SPRINT_ID} successfully.")
-          
-        else:
-             print(f"Failed to add issue to sprint: {sprint_response.status_code} - {sprint_response.text}")
-
+        return task_id
     else:
         print(f"Error creating task: {response.content}")
+        return None

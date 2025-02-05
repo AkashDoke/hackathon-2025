@@ -1,7 +1,7 @@
 from crewai.tools import BaseTool
 from typing import Type
 from pydantic import BaseModel, Field
-from meeting_recordings_analysis.gmail.utils import authenticate_gmail, create_message, create_draft
+from meeting_recordings_analysis.gmail.utils import authenticate_gmail, create_message, create_draft, send_email
 import os
 
 class GmailCustomToolInput(BaseModel):
@@ -25,7 +25,7 @@ class GmailCustomTool(BaseTool):
             message_text = body
 
             message = create_message(sender, to, subject, message_text)
-            draft = create_draft(service, "me", message)
+            draft = send_email(service, "me", message)
 
             return f"Email sent successfully! Draft id: {draft['id']}"
         except Exception as e:
