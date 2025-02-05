@@ -327,7 +327,7 @@ if st.session_state.page == "home":
             st.info("File uploaded successfully!")
 
             with st.spinner("Processing your file..."):
-                # transcription = meeting_minutes_flow.transcribe_meeting(uploaded_file.read())
+                transcription = meeting_minutes_flow.transcribe_meeting(uploaded_file.read())
                 st.success("Transcription Complete!")
                 st.text_area("Meeting Transcript", transcription, height=200)
 
