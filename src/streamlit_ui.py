@@ -40,6 +40,9 @@ image_paths = {
     "akash": os.path.join(ASSETS_DIR, "akash.png"),
     "ankita": os.path.join(ASSETS_DIR, "ankita.png"),
     "dharmik": os.path.join(ASSETS_DIR, "dharmik.png"),
+    "Linkedin": os.path.join(ASSETS_DIR, "Linkedin.svg"),
+    "Github": os.path.join(ASSETS_DIR, "Github.svg"),
+    "email": os.path.join(ASSETS_DIR, "email.svg"),
 }
 # Function to encode images to base64
 
@@ -119,7 +122,7 @@ header_html = f"""
 
     #actions {{
         padding: 0 40px;
-        font-size: 22px;
+        font-size: 22px !important;
         margin-bottom: 10px;
         margin-top: 20px;
     }}
@@ -137,6 +140,7 @@ header_html = f"""
 
     .st-emotion-cache-1gulkj5 {{
         display: block;
+        height:300px;
     }}
 
     .st-emotion-cache-1104ytp p {{
@@ -162,7 +166,12 @@ header_html = f"""
         border-color: #009cdb !important;
     }}
     .st-emotion-cache-ocsh0s{{
-    background-color: #009cdb;
+        top: 50%;
+        right: 43%;
+        position: absolute;
+        background-color: #5BA8FF;
+        color: #fff !important;
+        border-color: #5BA8FF !important;
     }}
 
     .stColumn.st-emotion-cache-1h3k0y3.eiemyj2 {{
@@ -174,6 +183,7 @@ header_html = f"""
         align-items: center;
         display: flex;
         justify-content: center;
+        margin-top:50px
     }}
 
     .title {{
@@ -191,7 +201,28 @@ header_html = f"""
         font-weight: 400;
         font-size: 24px;
     }}
-
+    .st-emotion-cache-t1wise{{
+        padding:0px;
+    }}
+    .st-emotion-cache-1gulkj5.es2srfl0 .st-emotion-cache-ocsh0s{{
+        top: 50%;
+        right: 43%;
+        position: absolute;
+        background-color: #5BA8FF;
+        color: #fff !important;
+        border-color: #5BA8FF !important;
+    }}
+    .st-emotion-cache-fis6aj.e1blfcsg5{{
+        position: absolute;
+        bottom: 19%;
+        background-color:#fff;
+        width:80%;
+        margin:auto;
+    }}
+    .stHorizontalBlock.st-emotion-cache-ocqkz7.e6rk8up0{{
+        padding:30px;
+    }}
+ 
     @media screen and (min-width: 1024px) {{
         .stElementContainer.element-container.st-emotion-cache-ihqqol.eiemyj1 
         .st-emotion-cache-ocsh0s.e1obcldf2 {{
@@ -252,7 +283,7 @@ st.markdown("""
     }
 
     #text_area_1 {
-        height: 310px;
+        height: 300px;
     }
 
     .st-emotion-cache-1104ytp p,
@@ -289,8 +320,46 @@ st.markdown("""
         margin-bottom: -5px;
     }
     .st-emotion-cache-1104ytp a {
-        text-decoration: none;        
+        text-decoration: none; 
+        color:#5BA8FF;       
     }
+
+    .nav-link:hover {
+      text-decoration: none;
+    }
+         .st-emotion-cache-1104ytp h2{
+            font-size:24px;
+            }   
+.ai-info {
+            background-color: #f0f2f6; /* Light gray background */
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            font-family: Arial, sans-serif;
+            margin-top:30px;
+            font-size:16px !important;
+            height:300px
+        }
+            .ai-info p{
+            font-size:16px !important;
+        }
+           .ai-info img{
+            height:168px
+            }
+            .stCustomComponentV1.st-emotion-cache-1tvzk6f.e1begtbc0{
+            margin-top:20px
+            }
+            .st-emotion-cache-1104ytp{
+            margin-bottom:0px;
+            font-size:16px;
+            padding-left:20px
+            }
+                .st-emotion-cache-1104ytp p{
+            font-size:16px;
+            }
+            .stAlertContainer{
+            padding:10px;
+            }
 </style>
 
 """, unsafe_allow_html=True)
@@ -317,7 +386,6 @@ if st.session_state.page == "home":
     ]
     carousel(items=carousel_items)
 
-import streamlit as st
 
 st.write("---")
 st.header("Upload Your Meeting Audio File")
@@ -337,53 +405,63 @@ with col1:
             st.spinner("Processing your file...")
             # Simulating transcription process
             transcription = meeting_minutes_flow.transcribe_meeting(uploaded_file.read())
-            st.success("Transcription Complete!")
             st.text_area("Meeting Transcript", transcription, height=200)
             st.success("Transcription Complete!")   
     else:
         # AI-related content when no file is uploaded
         with col2:
-            st.write("🤖 **Did you know?** AI-powered transcription tools use Natural Language Processing (NLP) and Speech Recognition to convert speech into text accurately.")
-            st.write("🎙️ Upload an audio file to see AI in action!")
-            st.image("https://t3.ftcdn.net/jpg/05/59/87/12/360_F_559871209_pbXlOVArUal3mk6Ce60JuP13kmuIRCth.jpg", width=300)
 
+         st.markdown(
+        """
+        <div class="ai-info">
+            <p>🤖 <strong>Did you know?</strong></br> AI-powered transcription tools use Natural Language Processing (NLP) and Speech Recognition to convert speech into text accurately.</p>
+            <p>🎙️ Upload an audio file to see AI in action!</p>
+            <img src="https://t3.ftcdn.net/jpg/05/59/87/12/360_F_559871209_pbXlOVArUal3mk6Ce60JuP13kmuIRCth.jpg" width="300" >
+        </div>
+        """, unsafe_allow_html=True
+    )
+    
 # Show Actions section only if a file is uploaded
 if uploaded_file:
-    st.write("🚀 Actions")
+    st.write("Actions")
     col1, col2, col3 = st.columns(3)
+    if 'summary_open' not in st.session_state:
+        st.session_state.summary_open = False
+
+    if 'faq_open' not in st.session_state:
+        st.session_state.faq_open = False
+
+    if 'task_open' not in st.session_state:
+        st.session_state.task_open = False
 
     with col1:
-        with st.expander("📄 Summary", expanded=False):
-            if st.session_state.get("summary_open", False):  # Check if the expander was opened
-                st.spinner("Generating summary...")
-                summary = meeting_minutes_flow.generate_summary()
-                st.success("Summary Generated!")
-                st.text_area("Summary", summary, height=200)
+        st.spinner("Generating summary...")
+        with st.expander("📄 Summary", expanded=st.session_state.summary_open):
 
-            else:
-                st.session_state["summary_open"] = True  # Set the session state when expander is opened
+            # summary = meeting_minutes_flow.generate_summary()
+            st.success("Summary Generated!")
+            st.session_state.summary_open = True
+            # st.text_area("Summary", summary, height=200)
 
     with col2:
-        with st.expander("📚 FAQ", expanded=False):
-            if st.session_state.get("faq_open", False):  # Check if the expander was opened
+        if st.session_state.summary_open:
+            with st.expander("📚 FAQ", expanded=st.session_state.faq_open):
                 st.spinner("Generating FAQ...")
-                faq = meeting_minutes_flow.generate_meeting_minutes_faq()
+                # faq = meeting_minutes_flow.generate_meeting_minutes_faq()
                 st.success("FAQ Generated!")
-                st.text_area("FAQ", faq, height=200)
-
-            else:
-                st.session_state["faq_open"] = True  # Set the session state when expander is opened
+                st.session_state.faq_open = True
+                # st.text_area("FAQ", faq, height=200)
+        else:
+            # FAQ section is disabled if Summary isn't open
+            with st.expander("📚 FAQ", expanded=False):
+                st.write("Please generate the summary first.")
 
     with col3:
-        with st.expander("📝 Create Task", expanded=False):
-            if st.session_state.get("tasks_open", False):  # Check if the expander was opened
-                st.spinner("Generating tasks...")
-                tasks = meeting_minutes_flow.generate_meeting_minutes_jira_tasks()
-                st.success("Tasks Generated!")
-                st.text_area("Tasks", tasks, height=200)
-
-            else:
-                st.session_state["tasks_open"] = True  # Set the session state when expander is opened
+        with st.expander("📝 Create Task"):
+            st.spinner("Generating tasks...")
+            # tasks = meeting_minutes_flow.generate_meeting_minutes_jira_tasks()
+            st.success("Tasks Generated!")
+            # st.text_area("Tasks", tasks, height=200)
 
 elif st.session_state.page == "ourteam":
     st.markdown("<h2>Meet our awesome team at Arieotech!</h2>",
@@ -461,6 +539,7 @@ elif st.session_state.page == "ourteam":
             <img src="data:image/png;base64,{member['image']}" alt="{member['name']}">
             <h3>{member['name']}</h3>
             <a href="{member['linkedin']}" target="_blank" class="linkedin-button">LinkedIn</a>
+            
         </div>
         """
     team_html += '</div>'
