@@ -20,7 +20,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-agentops.init(api_key=os.getenv("AGENT_OPS_KEY"))
+#agentops.init(api_key=os.getenv("AGENT_OPS_KEY"))
 
 # MSAL Authentication Configuration
 CLIENT_ID = os.getenv("CLIENT_ID")
@@ -35,8 +35,8 @@ class MeetingMinutesState(BaseModel):
     meeting_minutes_faq: str = ""
     meeting_minutes_jira_tasks: str = ""
 
-openai_api_key = os.getenv("OPENAI_API_KEY")
-client = OpenAI(api_key=openai_api_key)
+# openai_api_key = os.getenv("OPENAI_API_KEY")
+# client = OpenAI(api_key=openai_api_key)
 
 # Flow Class
 class MeetingMinutesFlow:
