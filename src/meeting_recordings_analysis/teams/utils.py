@@ -31,9 +31,12 @@ def convert_markdown_to_slack_format(markdown_text):
     return markdown_text
 
 def send_to_slack(message, webhook_url):
+
     slack_payload = {
-        "text": message
+    "type": "markdown",
+    "text": message,
     }
+
     response = requests.post(webhook_url, json=slack_payload)
     if response.status_code == 200:
         print("Message successfully sent to Slack.")
