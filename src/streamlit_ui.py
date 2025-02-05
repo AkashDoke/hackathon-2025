@@ -386,82 +386,81 @@ if st.session_state.page == "home":
     ]
     carousel(items=carousel_items)
 
+    st.write("---")
+    st.header("Upload Your Meeting Audio File")
 
-st.write("---")
-st.header("Upload Your Meeting Audio File")
+    col1, col2 = st.columns([4, 8])
 
-col1, col2 = st.columns([4, 8])
-
-uploaded_file = None
-transcription = ""
-
-with col1:
-    uploaded_file = st.file_uploader("Choose a file", type=["mp3", "wav"])
-    
-    if uploaded_file:
-        st.info("File uploaded successfully!")
-
-        with col2: 
-            st.spinner("Processing your file...")
-            # Simulating transcription process
-            transcription = meeting_minutes_flow.transcribe_meeting(uploaded_file.read())
-            st.text_area("Meeting Transcript", transcription, height=200)
-            st.success("Transcription Complete!")   
-    else:
-        # AI-related content when no file is uploaded
-        with col2:
-
-         st.markdown(
-        """
-        <div class="ai-info">
-            <p>🤖 <strong>Did you know?</strong></br> AI-powered transcription tools use Natural Language Processing (NLP) and Speech Recognition to convert speech into text accurately.</p>
-            <p>🎙️ Upload an audio file to see AI in action!</p>
-            <img src="https://t3.ftcdn.net/jpg/05/59/87/12/360_F_559871209_pbXlOVArUal3mk6Ce60JuP13kmuIRCth.jpg" width="300" >
-        </div>
-        """, unsafe_allow_html=True
-    )
-    
-# Show Actions section only if a file is uploaded
-if uploaded_file:
-    st.write("Actions")
-    col1, col2, col3 = st.columns(3)
-    if 'summary_open' not in st.session_state:
-        st.session_state.summary_open = False
-
-    if 'faq_open' not in st.session_state:
-        st.session_state.faq_open = False
-
-    if 'task_open' not in st.session_state:
-        st.session_state.task_open = False
+    uploaded_file = None
+    transcription = ""
 
     with col1:
-        st.spinner("Generating summary...")
-        with st.expander("📄 Summary", expanded=st.session_state.summary_open):
+        uploaded_file = st.file_uploader("Choose a file", type=["mp3", "wav"])
+        
+        if uploaded_file:
+            st.info("File uploaded successfully!")
 
-            # summary = meeting_minutes_flow.generate_summary()
-            st.success("Summary Generated!")
-            st.session_state.summary_open = True
-            # st.text_area("Summary", summary, height=200)
-
-    with col2:
-        if st.session_state.summary_open:
-            with st.expander("📚 FAQ", expanded=st.session_state.faq_open):
-                st.spinner("Generating FAQ...")
-                # faq = meeting_minutes_flow.generate_meeting_minutes_faq()
-                st.success("FAQ Generated!")
-                st.session_state.faq_open = True
-                # st.text_area("FAQ", faq, height=200)
+            with col2: 
+                st.spinner("Processing your file...")
+                # Simulating transcription process
+                transcription = meeting_minutes_flow.transcribe_meeting(uploaded_file.read())
+                st.text_area("Meeting Transcript", transcription, height=200)
+                st.success("Transcription Complete!")   
         else:
-            # FAQ section is disabled if Summary isn't open
-            with st.expander("📚 FAQ", expanded=False):
-                st.write("Please generate the summary first.")
+            # AI-related content when no file is uploaded
+            with col2:
+                st.markdown(
+                    """
+                    <div class="ai-info">
+                        <p>🤖 <strong>Did you know?</strong></br> AI-powered transcription tools use Natural Language Processing (NLP) and Speech Recognition to convert speech into text accurately.</p>
+                        <p>🎙️ Upload an audio file to see AI in action!</p>
+                        <img src="https://t3.ftcdn.net/jpg/05/59/87/12/360_F_559871209_pbXlOVArUal3mk6Ce60JuP13kmuIRCth.jpg" width="300" >
+                    </div>
+                    """, unsafe_allow_html=True
+                )
+        
+    # Show Actions section only if a file is uploaded
+    if uploaded_file:
+        st.write("Actions")
+        col1, col2, col3 = st.columns(3)
+        if 'summary_open' not in st.session_state:
+            st.session_state.summary_open = False
 
-    with col3:
-        with st.expander("📝 Create Task"):
-            st.spinner("Generating tasks...")
-            # tasks = meeting_minutes_flow.generate_meeting_minutes_jira_tasks()
-            st.success("Tasks Generated!")
-            # st.text_area("Tasks", tasks, height=200)
+        if 'faq_open' not in st.session_state:
+            st.session_state.faq_open = False
+
+        if 'task_open' not in st.session_state:
+            st.session_state.task_open = False
+
+        with col1:
+            st.spinner("Generating summary...")
+            with st.expander("📄 Summary", expanded=st.session_state.summary_open):
+                # summary = meeting_minutes_flow.generate_summary()
+                st.success("Summary Generated!")
+                st.session_state.summary_open = True
+                # st.text_area("Summary", summary, height=200)
+
+        with col2:
+            if st.session_state.summary_open:
+                with st.expander("📚 FAQ", expanded=st.session_state.faq_open):
+                    st.spinner("Generating FAQ...")
+                    # faq = meeting_minutes_flow.generate_meeting_minutes_faq()
+                    st.success("FAQ Generated!")
+                    st.session_state.faq_open = True
+                    # st.text_area("FAQ", faq, height=200)
+            else:
+                # FAQ section is disabled if Summary isn't open
+                with st.expander("📚 FAQ", expanded=False):
+                    st.write("Please generate the summary first.")
+
+        with col3:
+            with st.expander("📝 Create Task"):
+                st.spinner("Generating tasks...")
+                # tasks = meeting_minutes_flow.generate_meeting_minutes_jira_tasks()
+                st.success("Tasks Generated!")
+                # st.text_area("Tasks", tasks, height=200)
+
+
 
 elif st.session_state.page == "ourteam":
     st.markdown("<h2>Meet our awesome team at Arieotech!</h2>",
