@@ -16,6 +16,11 @@ class Agents():
       self.azure_llm = LLM( model=os.getenv("AZURE_OPENAI_MODEL"),
                 base_url=os.getenv("AZURE_OPENAI_BASEURL"),
 		api_key=os.getenv("AZURE_OPENAI_KEY"))
+      self.deepseak_llm = LLM(
+                base_url=os.getenv("OLLAMA_BASE_URL"),
+                temperature=0.7,
+                model=os.getenv("OLLAMA_MODEL")
+                )
     #model="llama3-8b-8192")
     #anthropic_api_key = os.getenv("ANTHROPIC_API_KEY")
     #self.llm = ChatAnthropic(anthropic_api_key=anthropic_api_key,

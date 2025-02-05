@@ -20,7 +20,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-agentops.init(api_key=os.getenv("AGENT_OPS_KEY"))
+#agentops.init(api_key=os.getenv("AGENT_OPS_KEY"))
 
 # MSAL Authentication Configuration
 CLIENT_ID = os.getenv("CLIENT_ID")

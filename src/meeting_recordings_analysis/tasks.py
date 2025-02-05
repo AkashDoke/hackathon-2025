@@ -40,46 +40,94 @@ class Tasks():
             agent=agent,
         )
     
+    # def summarizer_faq_agent_task(self, agent, transcript):
+    #     return Task(
+    #         description=(f"""
+    #         **Task Title**: FAQ Creation and Sentiment Analysis  
+    #         **Date**: {date.today().strftime('%B %d, %Y')}  
+
+    #         **Objective**:  
+    #         Based on the provided transcript, create a well-organized Frequently Asked Questions (FAQ) document. The FAQ should include professionally formatted questions and answers, clearly categorized and easy to navigate.
+
+    #         **Transcript**:
+    #         {transcript}
+
+    #         **Instructions**:  
+    #         1. **FAQ Creation**:  
+    #             - Review the transcript and extract key points to form relevant and precise questions and answers.
+    #             - Each FAQ entry should be professionally formatted as follows:
+
+    #                 - **Question**: [Insert question here]  
+    #                   **Answer**: [Insert detailed answer here]  
+
+    #             - Please ensure that the questions are phrased clearly and concisely, and that the answers provide informative and accurate explanations.
+    #             - Each FAQ entry should be logically ordered and easy to follow.
+
+    #         2. **Sentiment Analysis**:  
+    #             - After creating the FAQ, analyze the sentiment of the transcript.
+    #             - The sentiment should be categorized as one of the following: Positive, Neutral, or Negative.
+    #             - Save the sentiment analysis result to a file called "sentiment_analysis.txt" in the "faq" directory.
+            
+    #         **Expected Output**:  
+    #         - A well-organized FAQ file that follows the format outlined above.
+    #         - A sentiment analysis file named "sentiment_analysis.txt" containing the sentiment categorization.
+
+    #         **File Locations**:  
+    #         - The FAQ file will be saved as "faq.txt" in the "faq" directory.  
+    #         - The sentiment analysis file will be saved as "sentiment_analysis.txt" in the same "faq" directory.
+    #     """),
+    #         expected_output=("""A well-organized FAQ based on the provided transcript, and a sentiment analysis file indicating the tone of the content."""),
+    #         agent=agent,
+    #     )
+    
     def summarizer_faq_agent_task(self, agent, transcript):
         return Task(
             description=(f"""
-            **Task Title**: FAQ Creation and Sentiment Analysis  
-            **Date**: {date.today().strftime('%B %d, %Y')}  
-
-            **Objective**:  
-            Based on the provided transcript, create a well-organized Frequently Asked Questions (FAQ) document. The FAQ should include professionally formatted questions and answers, clearly categorized and easy to navigate.
-
-            **Transcript**:
-            {transcript}
-
-            **Instructions**:  
-            1. **FAQ Creation**:  
-                - Review the transcript and extract key points to form relevant and precise questions and answers.
-                - Each FAQ entry should be professionally formatted as follows:
-
-                    - **Question**: [Insert question here]  
-                      **Answer**: [Insert detailed answer here]  
-
-                - Please ensure that the questions are phrased clearly and concisely, and that the answers provide informative and accurate explanations.
-                - Each FAQ entry should be logically ordered and easy to follow.
-
-            2. **Sentiment Analysis**:  
-                - After creating the FAQ, analyze the sentiment of the transcript.
-                - The sentiment should be categorized as one of the following: Positive, Neutral, or Negative.
-                - Save the sentiment analysis result to a file called "sentiment_analysis.txt" in the "faq" directory.
+            *FAQ Creation and Sentiment Analysis Task*  
             
-            **Expected Output**:  
-            - A well-organized FAQ file that follows the format outlined above.
-            - A sentiment analysis file named "sentiment_analysis.txt" containing the sentiment categorization.
+            *Date:* {date.today().strftime('%B %d, %Y')}  
 
-            **File Locations**:  
-            - The FAQ file will be saved as "faq.txt" in the "faq" directory.  
-            - The sentiment analysis file will be saved as "sentiment_analysis.txt" in the same "faq" directory.
-        """),
-            expected_output=("""A well-organized FAQ based on the provided transcript, and a sentiment analysis file indicating the tone of the content."""),
+            *Objective:*  
+            Based on the provided transcript, create a well-organized Frequently Asked Questions (FAQ) document in Slack’s Markdown format. The FAQ should include professionally formatted questions and answers, clearly categorized and easy to navigate.
+
+            *Transcript:*  
+            ``` 
+            {transcript}
+            ```
+
+            *Instructions:*  
+
+            *1. FAQ Creation:*  
+            - Review the transcript and extract key points to form relevant and precise questions and answers.
+            - Each FAQ entry should be formatted as follows:
+
+            ```
+            *Question:* [Insert question here]  
+            *Answer:*  
+            [Insert detailed answer here]  
+            ```
+
+            - Ensure the questions are clear and concise, while the answers provide informative and accurate explanations.
+            - Maintain logical ordering and ease of navigation.
+
+            *2. Sentiment Analysis:*  
+            - After creating the FAQ, analyze the sentiment of the transcript.
+            - Categorize the sentiment as one of the following: *Positive*, *Neutral*, or *Negative*.
+            - Save the sentiment analysis result in a file named `sentiment_analysis.txt` inside the `faq` directory.
+
+            *Expected Output:*  
+            - A well-organized FAQ file (`faq.txt`) formatted in Slack’s Markdown style.  
+            - A sentiment analysis file (`sentiment_analysis.txt`) containing the sentiment categorization.
+
+            *File Locations:*  
+            - *FAQ File:* `faq/faq.txt`  
+            - *Sentiment Analysis File:* `faq/sentiment_analysis.txt`
+            """),
+            expected_output=("""A properly formatted FAQ document in Slack's Markdown style and a sentiment analysis file indicating the tone of the content."""), 
             agent=agent,
         )
-    
+
+
     def summarizer_jira_agent_task(self, agent, transcript):
         return Task(
             description=(f"""
