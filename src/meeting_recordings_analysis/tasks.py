@@ -1,5 +1,6 @@
 from crewai import Task
-
+from meeting_recordings_analysis.tools.jira_custom_tool import JiraCustomTool
+from datetime import date
 
 class Tasks(): 
     def summarizer_agent_task(self, agent, transcript):
@@ -23,23 +24,58 @@ class Tasks():
             agent=agent,
         )
     
+    def summarizer_meeting_minutes_writer_task(self, agent):
+        return Task(
+            description=("""
+                Write the meeting minutes based on the summary, action items and sentiment.  This should give everything needed to know based on summary and action items.
+    Put them into a nice markdown document.
+
+    - Use Todays Date for the meeting date
+    - Use the company name TylerAI for the company name
+    - User Tyler for the name of the organizer
+    - Create a list of attendees from the transcript (make up some if needed)
+    - The location was on Zoom
+            """),
+            expected_output=("""A meeting minutes document"""),
+            agent=agent,
+        )
+    
     def summarizer_faq_agent_task(self, agent, transcript):
         return Task(
             description=(f"""
-                Create an FAQ based on the given transcript with the following content:
-    {transcript}
+            **Task Title**: FAQ Creation and Sentiment Analysis  
+            **Date**: {date.today().strftime('%B %d, %Y')}  
 
-    Write the FAQ to a file called "faq.txt" in the "faq" directory. This is provided by the tool.
+            **Objective**:  
+            Based on the provided transcript, create a well-organized Frequently Asked Questions (FAQ) document. The FAQ should include professionally formatted questions and answers, clearly categorized and easy to navigate.
 
-    The FAQ should be formatted as follows:
-    - **Question**: [Insert question here]
-      **Answer**: [Insert answer here]
-    - **Question**: [Insert next question here]
-      **Answer**: [Insert answer here]
-    - ...
+            **Transcript**:
+            {transcript}
 
-    I would also like you to analyze the sentiment of the transcript and save it to a file called "sentiment_analysis.txt" in the "faq" directory. The sentiment can be categorized as Positive, Neutral, or Negative.
-            """),
+            **Instructions**:  
+            1. **FAQ Creation**:  
+                - Review the transcript and extract key points to form relevant and precise questions and answers.
+                - Each FAQ entry should be professionally formatted as follows:
+
+                    - **Question**: [Insert question here]  
+                      **Answer**: [Insert detailed answer here]  
+
+                - Please ensure that the questions are phrased clearly and concisely, and that the answers provide informative and accurate explanations.
+                - Each FAQ entry should be logically ordered and easy to follow.
+
+            2. **Sentiment Analysis**:  
+                - After creating the FAQ, analyze the sentiment of the transcript.
+                - The sentiment should be categorized as one of the following: Positive, Neutral, or Negative.
+                - Save the sentiment analysis result to a file called "sentiment_analysis.txt" in the "faq" directory.
+            
+            **Expected Output**:  
+            - A well-organized FAQ file that follows the format outlined above.
+            - A sentiment analysis file named "sentiment_analysis.txt" containing the sentiment categorization.
+
+            **File Locations**:  
+            - The FAQ file will be saved as "faq.txt" in the "faq" directory.  
+            - The sentiment analysis file will be saved as "sentiment_analysis.txt" in the same "faq" directory.
+        """),
             expected_output=("""A well-organized FAQ based on the provided transcript, and a sentiment analysis file indicating the tone of the content."""),
             agent=agent,
         )
@@ -70,8 +106,48 @@ class Tasks():
 
     Additionally, ensure that the story and tasks are logically connected to the content of the FAQ.
             """),
+            tools=[JiraCustomTool()],
             expected_output=("""A well-structured Jira story with detailed tasks and sub-tasks based on the FAQ content. The story should provide a clear overview and actionable steps for implementation."""),
             agent=agent,
         )
     
-tasks = Tasks() 
+    def meeting_minutes_writing_task(self, agent):
+        return Task(
+            description=("""
+                Write the meeting minutes based on the summary, action items and sentiment.  This should give everything needed to know based on summary and action items.
+    Put them into a nice markdown document.
+
+    - Use Todays Date for the meeting date
+    - Use the company name TylerAI for the company name
+    - User Tyler for the name of the organizer
+    - Create a list of attendees from the transcript (make up some if needed)
+    - The location was on Zoom
+            """),
+            expected_output=("""A meeting minutes document"""),
+            agent=agent,
+        )
+    
+    def gmail_draft_task(self, agent, body):
+        return Task(
+            description=(f"""
+                Send an email to the client with the meeting minutes using the provided body: {body}
+            """),
+            expected_output=("""To return whether the email was sent successfully or not"""),
+            agent=agent,
+        )
+    
+    def slack_draft_task(self, agent, body):
+        return Task(
+            description=(f"""
+                Send an slack message to the client with the FAQ using the provided body: {body}
+            """),
+            expected_output=("""To return whether the slack message was sent successfully or not"""),
+            agent=agent,
+        )
+    
+    def jira_draft_task(self, agent, body):
+        return Task(
+            description=(f"""Take the markdown input from another crew, send it to the tool as-is  using the provided body: {body}"""),
+            expected_output=("""A ticket created successfully with the provided markdown content."""),
+            agent=agent,
+        )
