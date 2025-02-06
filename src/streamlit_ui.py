@@ -139,7 +139,7 @@ header_html = f"""
 
     #upload-your-meeting-audio-file {{
         font-size: 22px;
-        padding: 0 20px;
+        padding: 0 10px;
     }}
 
     .st-emotion-cache-1gulkj5 {{
@@ -177,7 +177,11 @@ header_html = f"""
         color: #fff !important;
         border-color: #5BA8FF !important;
     }}
-
+    .st-emotion-cache-ocsh0s:active {{
+      background-color: #5BA8FF;
+        color: #fff !important;
+        border-color: #5BA8FF !important;
+    }}
     .stColumn.st-emotion-cache-1h3k0y3.eiemyj2 {{
         position: relative;
     }}
@@ -217,16 +221,21 @@ header_html = f"""
         border-color: #5BA8FF !important;
     }}
     .st-emotion-cache-fis6aj.e1blfcsg5{{
+        border-radius: 8px;
         position: absolute;
         bottom: 19%;
-        background-color:#fff;
-        width:80%;
-        margin:auto;
+        background-color: #fff;
+        width: 80%;
+        padding: 2px 20px;
+        margin: auto;
     }}
     .stHorizontalBlock.st-emotion-cache-ocqkz7.e6rk8up0{{
-        padding:30px;
+        padding:10px 30px;
     }}
- 
+         .action-heading p{{
+            font-size:20px !important;
+            font-weight:500 !important;
+            }}
     @media screen and (min-width: 1024px) {{
         .stElementContainer.element-container.st-emotion-cache-ihqqol.eiemyj1 
         .st-emotion-cache-ocsh0s.e1obcldf2 {{
@@ -356,13 +365,19 @@ st.markdown("""
             .st-emotion-cache-1104ytp{
             margin-bottom:0px;
             font-size:16px;
-            padding-left:20px
             }
                 .st-emotion-cache-1104ytp p{
             font-size:16px;
             }
             .stAlertContainer{
             padding:10px;
+            }
+            .action-heading p{
+            font-size:20px !important;
+            font-weight:500 !important;
+            }
+            .st-emotion-cache-1pp48v6{
+            gap:10px;
             }
 </style>
 
@@ -393,7 +408,14 @@ if st.session_state.page == "home":
     carousel(items=carousel_items)
 
     st.write("---")
-    st.header("Upload Your Meeting Audio File")
+    st.markdown("""
+    <div style="display: flex; align-items: center; padding-left:20px;">
+        <h2 style="margin: 0;">Upload Your Meeting Audio File</h2>
+    </div>
+""", unsafe_allow_html=True)
+
+
+
 
     col1, col2 = st.columns([4, 8])
 
@@ -428,7 +450,7 @@ if st.session_state.page == "home":
 
     # Show Actions section only if a file is uploaded
     if uploaded_file:
-        st.write("Actions")
+        st.markdown('<p style="padding-left:30px; font-weight: 600;font-size: 22px;">Actions</p>', unsafe_allow_html=True)
         col1, col2, col3 = st.columns(3)
         if 'summary_open' not in st.session_state:
             st.session_state.summary_open = False
@@ -469,9 +491,8 @@ if st.session_state.page == "home":
 
 
 elif st.session_state.page == "ourteam":
-    st.markdown("<h2>Meet our awesome team at Arieotech!</h2>",
-                unsafe_allow_html=True)
 
+    st.markdown('<p style="padding-left:30px; font-weight: 600;font-size: 22px;">Meet our awesome team at Arieotech!</p>', unsafe_allow_html=True)
     team_members = [
         {"name": "Akash Doke",
          "image": encoded_images["akash"],
@@ -526,7 +547,7 @@ elif st.session_state.page == "ourteam":
     box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.15);
 }}
 
-.team-card img {{
+.team-card-img {{
     border-radius: 50%;
     width: 140px; 
     height: 140px; 
@@ -579,7 +600,7 @@ elif st.session_state.page == "ourteam":
 </style>
 
 <div class="team-card">
-    <img src="data:image/png;base64,{member['image']}" alt="{member['name']}">
+    <img src="data:image/png;base64,{member['image']}" alt="{member['name']}" class="team-card-img">
     <h3>{member['name']}</h3>
     <div class="social-icons">
         <a href="{member['linkedin']}" target="_blank" class="icon">
