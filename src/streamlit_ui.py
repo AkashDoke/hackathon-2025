@@ -160,7 +160,7 @@ header_html = f"""
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     }}
 
-    .stElementContainer.element-container.st-emotion-cache-ihqqol.eiemyj1 
+    .stElementContainer.element-container.st-emotion-cache-ihqqol.eiemyj1
     .st-emotion-cache-ocsh0s.e1obcldf2 {{
         top: 50%;
         right: 43%;
@@ -241,7 +241,7 @@ header_html = f"""
             margin-left: calc(-50vw + 50%) !important;
             }}
     @media screen and (min-width: 1024px) {{
-        .stElementContainer.element-container.st-emotion-cache-ihqqol.eiemyj1 
+        .stElementContainer.element-container.st-emotion-cache-ihqqol.eiemyj1
         .st-emotion-cache-ocsh0s.e1obcldf2 {{
             top: 50%;
             right: 43%;
@@ -337,8 +337,8 @@ st.markdown("""
         margin-bottom: -5px;
     }
     .st-emotion-cache-1104ytp a {
-        text-decoration: none; 
-        color:#5BA8FF;       
+        text-decoration: none;
+        color:#5BA8FF;
     }
 
     .nav-link:hover {
@@ -346,7 +346,7 @@ st.markdown("""
     }
          .st-emotion-cache-1104ytp h2{
             font-size:24px;
-            }   
+            }
 .ai-info {
             background-color: #f0f2f6; /* Light gray background */
             padding: 15px;
@@ -423,9 +423,6 @@ if st.session_state.page == "home":
     </div>
 """, unsafe_allow_html=True)
 
-
-
-
     col1, col2 = st.columns([4, 8])
 
     uploaded_file = None
@@ -459,7 +456,8 @@ if st.session_state.page == "home":
 
     # Show Actions section only if a file is uploaded
     if uploaded_file:
-        st.markdown('<p style="padding-left:30px; font-weight: 600;font-size: 22px;">Actions</p>', unsafe_allow_html=True)
+        st.markdown(
+            '<p style="padding-left:30px; font-weight: 600;font-size: 22px;">Actions</p>', unsafe_allow_html=True)
         col1, col2, col3 = st.columns(3)
         if 'summary_open' not in st.session_state:
             st.session_state.summary_open = False
@@ -471,32 +469,43 @@ if st.session_state.page == "home":
             st.session_state.task_open = False
 
         with col1:
-            st.spinner("Generating summary...")
-            with st.expander("📄 Summary", expanded=st.session_state.summary_open):
-                # summary = meeting_minutes_flow.generate_summary()
-                st.success("Summary Generated!")
-                st.session_state.summary_open = True
-                # st.text_area("Summary", summary, height=200)
+            summary_expander = st.expander(
+                "📄 Summary", expanded=st.session_state.summary_open)
+            if summary_expander:
+                with summary_expander:
+                    with st.spinner("Generating summary..."):
+                        # summary = meeting_minutes_flow.generate_summary()
+                        st.success("Summary Generated!")
+                        st.session_state.summary_open = True
+                        # st.text_area("Summary", summary, height=200)
+                    st.session_state.summary_open = not st.session_state.summary_open
 
         with col2:
-            if st.session_state.summary_open:
-                with st.expander("📚 FAQ", expanded=st.session_state.faq_open):
-                    st.spinner("Generating FAQ...")
-                    # faq = meeting_minutes_flow.generate_meeting_minutes_faq()
-                    st.success("FAQ Generated!")
-                    st.session_state.faq_open = True
-                    # st.text_area("FAQ", faq, height=200)
+            faq_expander = st.expander(
+                "📚 FAQ", expanded=st.session_state.faq_open)
+            if faq_expander:
+                with faq_expander:
+                    with st.spinner("Generating FAQ..."):
+                        # faq = meeting_minutes_flow.generate_meeting_minutes_faq()
+                        st.success("FAQ Generated!")
+                        st.session_state.faq_open = True
+                        # st.text_area("FAQ", faq, height=200)
+                    st.session_state.faq_open = not st.session_state.faq_open
             else:
-                # FAQ section is disabled if Summary isn't open
-                with st.expander("📚 FAQ", expanded=False):
+                with faq_expander:
                     st.write("Please generate the summary first.")
 
         with col3:
-            with st.expander("📝 Create Task"):
-                st.spinner("Generating tasks...")
-                # tasks = meeting_minutes_flow.generate_meeting_minutes_jira_tasks()
-                st.success("Tasks Generated!")
-                # st.text_area("Tasks", tasks, height=200)
+            task_expander = st.expander(
+                "📝 Create Task", expanded=st.session_state.task_open)
+            if task_expander:
+                with task_expander:
+                    with st.spinner("Generating tasks..."):
+                        # tasks = meeting_minutes_flow.generate_meeting_minutes_jira_tasks()
+                        st.success("Tasks Generated!")
+                        st.session_state.task_open = True
+                        # st.text_area("Tasks", tasks, height=200)
+                    st.session_state.task_open = not st.session_state.task_open
 
 
 elif st.session_state.page == "ourteam":
