@@ -1,3 +1,4 @@
+from meeting_recordings_analysis.main import meeting_minutes_flow
 import streamlit as st
 from streamlit.components.v1 import html
 from streamlit_carousel import carousel
@@ -11,7 +12,6 @@ import sys
 # Add the src directory to the Python path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 # Add the src/ directory to the Python path
-from meeting_recordings_analysis.main import meeting_minutes_flow
 
 
 # Initialize session state for navigation
@@ -30,7 +30,8 @@ st.set_page_config(page_title="Meeting Minutes Generator", layout="wide")
 
 # Get the directory where the script is located
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # This is "src/demo/"
-ASSETS_DIR = os.path.join(BASE_DIR, "meeting_recordings_analysis/assets")  # This is "src/demo/assets/"
+# This is "src/demo/assets/"
+ASSETS_DIR = os.path.join(BASE_DIR, "meeting_recordings_analysis/assets")
 
 image_paths = {
     "one": os.path.join(ASSETS_DIR, "one.png"),
@@ -40,9 +41,12 @@ image_paths = {
     "akash": os.path.join(ASSETS_DIR, "akash.png"),
     "ankita": os.path.join(ASSETS_DIR, "ankita.png"),
     "dharmik": os.path.join(ASSETS_DIR, "dharmik.png"),
-    "Linkedin": os.path.join(ASSETS_DIR, "Linkedin.svg"),
-    "Github": os.path.join(ASSETS_DIR, "Github.svg"),
-    "email": os.path.join(ASSETS_DIR, "email.svg"),
+    "Linkedin": os.path.join(ASSETS_DIR, "Linkedin.png"),
+    "Github": os.path.join(ASSETS_DIR, "Github.png"),
+    "email": os.path.join(ASSETS_DIR, "email.png"),
+    "three": os.path.join(ASSETS_DIR, "3.png"),
+    "four": os.path.join(ASSETS_DIR, "4.png"),
+    "five": os.path.join(ASSETS_DIR, "5.png"),
 }
 # Function to encode images to base64
 
@@ -380,9 +384,11 @@ if st.session_state.page == "home":
         {"title": "Real-time Transcription", "text": "Get accurate transcriptions instantly.",
             "img": f"data:image/png;base64,{encoded_images['two']}"},
         {"title": "Summarization", "text": "Generate concise summaries with AI.",
-            "img": f"data:image/png;base64,{encoded_images['one']}"},
+            "img": f"data:image/png;base64,{encoded_images['three']}"},
         {"title": "Collaboration", "text": "Share and collaborate on meeting notes effortlessly.",
-            "img": f"data:image/png;base64,{encoded_images['two']}"}
+            "img": f"data:image/png;base64,{encoded_images['four']}"},
+        {"title": "Collaboration", "text": "Share and collaborate on meeting notes effortlessly.",
+            "img": f"data:image/png;base64,{encoded_images['five']}"}
     ]
     carousel(items=carousel_items)
 
@@ -396,16 +402,17 @@ if st.session_state.page == "home":
 
     with col1:
         uploaded_file = st.file_uploader("Choose a file", type=["mp3", "wav"])
-        
+
         if uploaded_file:
             st.info("File uploaded successfully!")
 
-            with col2: 
+            with col2:
                 st.spinner("Processing your file...")
                 # Simulating transcription process
-                transcription = meeting_minutes_flow.transcribe_meeting(uploaded_file.read())
+                transcription = meeting_minutes_flow.transcribe_meeting(
+                    uploaded_file.read())
                 st.text_area("Meeting Transcript", transcription, height=200)
-                st.success("Transcription Complete!")   
+                st.success("Transcription Complete!")
         else:
             # AI-related content when no file is uploaded
             with col2:
@@ -418,7 +425,7 @@ if st.session_state.page == "home":
                     </div>
                     """, unsafe_allow_html=True
                 )
-        
+
     # Show Actions section only if a file is uploaded
     if uploaded_file:
         st.write("Actions")
@@ -461,85 +468,132 @@ if st.session_state.page == "home":
                 # st.text_area("Tasks", tasks, height=200)
 
 
-
 elif st.session_state.page == "ourteam":
     st.markdown("<h2>Meet our awesome team at Arieotech!</h2>",
                 unsafe_allow_html=True)
 
     team_members = [
         {"name": "Akash Doke",
-            "image": encoded_images["akash"], "linkedin": "https://www.linkedin.com/in/akashdoke/"},
+         "image": encoded_images["akash"],
+         "linkedin": "https://www.linkedin.com/in/akashdoke/",
+         "github": "https://github.com/akashdoke",
+         "email": "akashdoke@example.com"},
+
         {"name": "Abhishek Kulkarni",
-            "image": encoded_images["Abhi"], "linkedin": "https://www.linkedin.com/in/abhishek-kulkarni-5a31b3112/"},
+         "image": encoded_images["Abhi"],
+         "linkedin": "https://www.linkedin.com/in/abhishek-kulkarni-5a31b3112/",
+         "github": "https://github.com/abhikulkarni",
+         "email": "abhikulkarni@example.com"},
+
         {"name": "Ankita Chavan",
-            "image": encoded_images["ankita"], "linkedin": "https://www.linkedin.com/in/ankita-chavan-92a16b160/"},
+         "image": encoded_images["ankita"],
+         "linkedin": "https://www.linkedin.com/in/ankita-chavan-92a16b160/",
+         "github": "https://github.com/ankitachavan",
+         "email": "ankitachavan@example.com"},
+
         {"name": "Dharmik Desai",
-            "image": encoded_images["dharmik"], "linkedin": "https://www.linkedin.com/in/dharmikdesai/"}
+         "image": encoded_images["dharmik"],
+         "linkedin": "https://www.linkedin.com/in/dharmikdesai/",
+         "github": "https://github.com/dharmikdesai",
+         "email": "dharmikdesai@example.com"}
     ]
 
     team_html = '<div class="team-container">'
     for member in team_members:
         team_html += f"""
-           <style>
-        .team-container {{
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 40px;
-            margin-top: 20px;
-        }}
-        .team-card {{
-            background: #ffffff;
-            border-radius: 15px;
-            padding: 25px;
-            width: 280px;  /* Increased width */
-            height: 350px; /* Increased height */
-            text-align: center;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }}
-        .team-card:hover {{
-            transform: scale(1.05);
-            box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.15);
-        }}
-        .team-card img {{
-            border-radius: 50%;
-            width: 140px; /* Increased size */
-            height: 140px; /* Increased size */
-            object-fit: cover;
-            border: 5px solid #0077b5;
-            margin-bottom: 15px;
-        }}
-        .team-card h3 {{
-            margin: 10px 0 5px;
-            font-size: 22px; /* Slightly larger font */
-            color: #333;
-            font-weight: 600;
-        }}
-        .linkedin-button {{
-            display: inline-block;
-            margin-top: 15px;
-            padding: 10px 18px;
-            background-color: #0077b5;
-            color: white;
-            font-size: 16px;
-            font-weight: bold;
-            text-decoration: none;
-            border-radius: 5px;
-            transition: background 0.3s ease, transform 0.3s ease;
-        }}
-        .linkedin-button:hover {{
-            background-color: #005582;
-            transform: translateY(-2px);
-        }}
+          <style>
+.team-container {{
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 40px;
+    margin-top: 20px;
+}}
 
-    </style>
-        <div class="team-card">
-            <img src="data:image/png;base64,{member['image']}" alt="{member['name']}">
-            <h3>{member['name']}</h3>
-            <a href="{member['linkedin']}" target="_blank" class="linkedin-button">LinkedIn</a>
-            
-        </div>
+.team-card {{
+    background: #ffffff;
+    border-radius: 15px;
+    padding: 25px;
+    width: 280px;  
+    height: 380px; /* Adjusted height */
+    text-align: center;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}}
+
+.team-card:hover {{
+    transform: scale(1.05);
+    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.15);
+}}
+
+.team-card img {{
+    border-radius: 50%;
+    width: 140px; 
+    height: 140px; 
+    object-fit: cover;
+    border: 5px solid #0077b5;
+    margin-bottom: 15px;
+}}
+
+.team-card h3 {{
+    margin: 10px 0 5px;
+    font-size: 22px;
+    color: #333;
+    font-weight: 600;
+}}
+
+/* Social Icons Container */
+.social-icons {{
+    display: flex;
+    justify-content: center;
+    gap: 15px;  /* Adjusts spacing between icons */
+    margin-top: 15px;
+}}
+
+/* Individual Icon Styling */
+.icon {{
+    width: 45px;  /* Increased size for better visibility */
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: hidden;
+}}
+
+/* Hover Effect */
+.icon:hover {{
+    transform: scale(1.1);
+    box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.25);
+}}
+
+
+.icon img {{
+    width: 80%;  /* Adjust image size within the circle */
+    height: 80%;
+    object-fit: cover;
+}}
+</style>
+
+<div class="team-card">
+    <img src="data:image/png;base64,{member['image']}" alt="{member['name']}">
+    <h3>{member['name']}</h3>
+    <div class="social-icons">
+        <a href="{member['linkedin']}" target="_blank" class="icon">
+            <img src="https://img.freepik.com/free-psd/social-media-logo-design_23-2151296991.jpg" alt="LinkedIn">
+        </a>
+        <a href="{member['github']}" target="_blank" class="icon">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTKfpcT9pukR3OGAg5MzGXR0aopy7CRbEGjQYeprsv57ecKJlo4eRiZYuou9e_RAtuseHE&usqp=CAU" alt="GitHub">
+        </a>
+        <a href="mailto:{member['email']}" class="icon">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTrIlnK2H1OUyHmvnq0pG1d2Vt5YJOFxnnW4g&s" alt="Email">
+        </a>
+    </div>
+</div>
+
         """
     team_html += '</div>'
 
