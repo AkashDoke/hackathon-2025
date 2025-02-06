@@ -97,7 +97,7 @@ header_html = f"""
     }}
 
     footer {{
-        background-color: #007bff;
+        background-color: #5BA8FF;
         color: #fff;
         padding: 10px;
         width: 100%;
@@ -387,6 +387,7 @@ st.markdown("""
              width: 100vw !important;
             margin-left: calc(-50vw + 50%);
             }
+ 
 </style>
 
 """, unsafe_allow_html=True)
@@ -575,11 +576,12 @@ elif st.session_state.page == "ourteam":
 }}
 
 .team-card h3 {{
-    margin: 10px 0 5px;
-    font-size: 22px;
-    color: #333;
-    font-weight: 600;
-}}
+     margin: 10px 0 5px;
+      font-size: 18px;
+      color: #333;
+      font-weight: 600;
+      font-family: "Source Sans Pro", sans-serif;
+    }}
 
 /* Social Icons Container */
 .social-icons {{
