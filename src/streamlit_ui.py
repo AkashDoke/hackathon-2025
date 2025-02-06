@@ -36,7 +36,7 @@ ASSETS_DIR = os.path.join(BASE_DIR, "meeting_recordings_analysis/assets")
 image_paths = {
     "one": os.path.join(ASSETS_DIR, "one.png"),
     "two": os.path.join(ASSETS_DIR, "two.png"),
-    "LOGO_PATH": os.path.join(ASSETS_DIR, "logo.png"),
+    "LOGO_PATH": os.path.join(ASSETS_DIR, "arieo-animated.gif"),
     "Abhi": os.path.join(ASSETS_DIR, "Abhi.png"),
     "akash": os.path.join(ASSETS_DIR, "akash.png"),
     "ankita": os.path.join(ASSETS_DIR, "ankita.png"),
@@ -68,7 +68,7 @@ header_html = f"""
     .header {{
         display: flex;
         align-items: center;
-        padding: 20px;
+        padding: 10px 20px;
         background-color: #fff;
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     }}
@@ -80,7 +80,7 @@ header_html = f"""
     }}
 
     .logo {{
-        height: 30px;
+        height: 60px;
         margin-right: 15px;
     }}
 
@@ -235,6 +235,10 @@ header_html = f"""
          .action-heading p{{
             font-size:20px !important;
             font-weight:500 !important;
+            }} 
+            .vh-100.d-flex.flex-column.container{{
+             width: 100vw !important;
+            margin-left: calc(-50vw + 50%) !important;
             }}
     @media screen and (min-width: 1024px) {{
         .stElementContainer.element-container.st-emotion-cache-ihqqol.eiemyj1 
@@ -379,6 +383,10 @@ st.markdown("""
             .st-emotion-cache-1pp48v6{
             gap:10px;
             }
+            .container{
+             width: 100vw !important;
+            margin-left: calc(-50vw + 50%);
+            }
 </style>
 
 """, unsafe_allow_html=True)
@@ -406,6 +414,7 @@ if st.session_state.page == "home":
             "img": f"data:image/png;base64,{encoded_images['five']}"}
     ]
     carousel(items=carousel_items)
+
 
     st.write("---")
     st.markdown("""
