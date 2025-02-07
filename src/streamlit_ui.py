@@ -86,7 +86,7 @@ header_html = f"""
     .nav-link {{
         font-size: 18px;
         font-weight: bold;
-        color: #007bff;
+        color: #5BA8FF;
         cursor: pointer;
         text-decoration: none;
     }}
@@ -101,7 +101,7 @@ header_html = f"""
         padding: 10px;
         width: 100%;
         height: 40px;
-        position: fixed;
+        position: sticky;
         bottom: 0;
         left: 0;
         text-align: center;
@@ -144,6 +144,8 @@ header_html = f"""
     .st-emotion-cache-1gulkj5 {{
         display: block;
         height:300px;
+        background-color:#fff;
+        box-shadow:0 .5rem 1rem rgba(0,0,0,.15)!important;
     }}
 
     .st-emotion-cache-1104ytp p {{
@@ -155,10 +157,15 @@ header_html = f"""
         padding: 20px;
         height: 310px;
         margin-top: 28px;
-        background-color: rgb(240, 242, 246);
+        background-color: #fff;
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     }}
-
+.st-cv{{
+        padding: 20px;
+        height: 300px;
+        background-color: #fff;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}}
     .stElementContainer.element-container.st-emotion-cache-ihqqol.eiemyj1
     .st-emotion-cache-ocsh0s.e1obcldf2 {{
         top: 50%;
@@ -223,7 +230,7 @@ header_html = f"""
         border-radius: 8px;
         position: absolute;
         bottom: 19%;
-        background-color: #fff;
+        background-color: #F1F8FF;
         width: 80%;
         padding: 2px 20px;
         margin: auto;
@@ -239,6 +246,14 @@ header_html = f"""
              width: 100vw !important;
             margin-left: calc(-50vw + 50%) !important;
             }}
+               .container{{
+             width: 100vw !important;
+            margin-left: calc(-50vw + 50%) !important;
+            }}
+            .stAlert{{
+            width:fit-content;           
+            }}
+
     @media screen and (min-width: 1024px) {{
         .stElementContainer.element-container.st-emotion-cache-ihqqol.eiemyj1
         .st-emotion-cache-ocsh0s.e1obcldf2 {{
@@ -301,6 +316,8 @@ st.markdown("""
 
     #text_area_1 {
         height: 300px;
+        background-color:#fff;
+        box-shadow:0 .5rem 1rem rgba(0,0,0,.15)!important;
     }
 
     .st-emotion-cache-1104ytp p,
@@ -323,7 +340,7 @@ st.markdown("""
     }
 
     .st-emotion-cache-1h9usn1 {
-        background: rgb(240, 242, 246);
+        background: #fff;
     }
 
     .st-emotion-cache-1104ytp p {
@@ -344,18 +361,19 @@ st.markdown("""
     .nav-link:hover {
       text-decoration: none;
     }
-         .st-emotion-cache-1104ytp h2{
-            font-size:24px;
-            }
-.ai-info {
-            background-color: #f0f2f6; /* Light gray background */
+    .st-emotion-cache-1104ytp h2{
+       font-size:24px;
+     }
+    .ai-info {
+            background-color: #fff ;
             padding: 15px;
             border-radius: 10px;
             text-align: center;
             font-family: Arial, sans-serif;
             margin-top:30px;
             font-size:16px !important;
-            height:300px
+            height:300px;
+            box-shadow: 0 .5rem 1rem rgba(0,0,0,.15);
         }
             .ai-info p{
             font-size:16px !important;
@@ -374,7 +392,7 @@ st.markdown("""
             font-size:16px;
             }
             .stAlertContainer{
-            padding:10px;
+            padding:10px 60px 10px 14px;
             }
             .action-heading p{
             font-size:20px !important;
@@ -384,10 +402,14 @@ st.markdown("""
             gap:10px;
             }
             .container{
-             width: 100vw !important;
-            margin-left: calc(-50vw + 50%);
+             max-width: 1800px !important;
+            margin-left: calc(-50vw + 50%) !important;
             }
- 
+            .st-c7 {
+            box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15) !important;
+            background-color: #fff ;
+            }
+            
 </style>
 
 """, unsafe_allow_html=True)
@@ -616,6 +638,10 @@ elif st.session_state.page == "ourteam":
     height: 80%;
     object-fit: cover;
 }}
+            .container{{
+             width: 100vw !important;
+            margin-left: calc(-50vw + 50%) !important;
+            }}
 </style>
 
 <div class="team-card">
