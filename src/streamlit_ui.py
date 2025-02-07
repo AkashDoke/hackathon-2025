@@ -79,7 +79,7 @@ header_html = f"""
     }}
 
     .logo {{
-        height: 60px;
+        height: 46px;
         margin-right: 15px;
     }}
 
@@ -341,6 +341,7 @@ st.markdown("""
 
     .st-emotion-cache-1h9usn1 {
         background: #fff;
+        box-shadow:0 .5rem 1rem rgba(0, 0, 0, .15);
     }
 
     .st-emotion-cache-1104ytp p {
@@ -481,6 +482,36 @@ if st.session_state.page == "home":
         st.markdown(
             '<p style="padding-left:30px; font-weight: 600;font-size: 22px;">Actions</p>', unsafe_allow_html=True)
         col1, col2, col3 = st.columns(3)
+        st.markdown("""
+    <style>
+        .custom-box {
+          height: 405px !important;
+          background-color: #fff;
+          padding: 10px;
+          border-radius: 8px;
+          border: none !important;
+          margin-top: 0px !important;
+          overflow-x: auto;
+        
+        }
+        .custom-box h1, h2 , h3 ,h4 ,h5 ,h6{
+            font-size:18px !important;
+            color: #333;
+            padding: 8px !important;
+        }
+        .custom-box .st-emotion-cache-1104ytp p, .st-emotion-cache-1104ytp ol, .st-emotion-cache-1104ytp ul, .st-emotion-cache-1104ytp dl, .st-emotion-cache-1104ytp li {
+         text-align: left;
+         font-size: 15px !important;
+         color: #333;
+         }
+          .st-emotion-cache-8k2ppm.e1xskjyh2 span{
+            font-family:"Source Code Pro", monospace !important;
+            font-weight:500 !important;
+            font-size: 15px !important;
+           }
+    </style>
+""", unsafe_allow_html=True)
+
         if 'summary_open' not in st.session_state:
             st.session_state.summary_open = False
 
@@ -496,10 +527,11 @@ if st.session_state.page == "home":
             if summary_expander:
                 with summary_expander:
                     with st.spinner("Generating summary..."):
-                        # summary = meeting_minutes_flow.generate_summary()
+                        summary = meeting_minutes_flow.generate_summary()
                         st.success("Summary Generated!")
                         st.session_state.summary_open = True
-                        # st.text_area("Summary", summary, height=200)
+                        st.markdown(
+                            f"<div class='custom-box'><h4>Summary</h4>{summary}</div>", unsafe_allow_html=True)
                     st.session_state.summary_open = not st.session_state.summary_open
 
         with col2:
@@ -508,10 +540,11 @@ if st.session_state.page == "home":
             if faq_expander:
                 with faq_expander:
                     with st.spinner("Generating FAQ..."):
-                        # faq = meeting_minutes_flow.generate_meeting_minutes_faq()
+                        faq = meeting_minutes_flow.generate_meeting_minutes_faq()
                         st.success("FAQ Generated!")
                         st.session_state.faq_open = True
-                        # st.text_area("FAQ", faq, height=200)
+                        st.markdown(
+                            f"<div class='custom-box'><h4>FAQ</h4>{faq}</div>", unsafe_allow_html=True)
                     st.session_state.faq_open = not st.session_state.faq_open
             else:
                 with faq_expander:
@@ -523,10 +556,11 @@ if st.session_state.page == "home":
             if task_expander:
                 with task_expander:
                     with st.spinner("Generating tasks..."):
-                        # tasks = meeting_minutes_flow.generate_meeting_minutes_jira_tasks()
+                        tasks = meeting_minutes_flow.generate_meeting_minutes_jira_tasks()
                         st.success("Tasks Generated!")
                         st.session_state.task_open = True
-                        # st.text_area("Tasks", tasks, height=200)
+                        st.markdown(
+                            f"<div class='custom-box'><h4>Tasks</h4>{tasks}</div>", unsafe_allow_html=True)
                     st.session_state.task_open = not st.session_state.task_open
 
 
