@@ -60,7 +60,6 @@ def image_to_base64(image_path):
 encoded_images = {name: image_to_base64(path)
                   for name, path in image_paths.items()}
 
-print("LOGO_PATH", image_paths['LOGO_PATH'])
 
 # Custom Header with Logo
 header_html = f"""
@@ -256,9 +255,10 @@ header_html = f"""
 
 
 <div class="header">
+     <a href="?page=home" style="text-decoration: none;">
     <img src="data:image/png;base64,{encoded_images['LOGO_PATH']}" class="logo" alt="Arieotech">
+     </a>
     <div class="nav-container">
-        <a class="nav-link" href="?page=home">Home</a>
         <a class="nav-link" href="?page=ourteam">Our Team</a>
     </div>
 </div>
@@ -415,7 +415,6 @@ if st.session_state.page == "home":
             "img": f"data:image/png;base64,{encoded_images['five']}"}
     ]
     carousel(items=carousel_items)
-
 
     st.write("---")
     st.markdown("""
