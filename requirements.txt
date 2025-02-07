@@ -24,4 +24,4 @@ python-dotenv==1.0.1
 slack-sdk
 pydub==0.25.1
 groq
-pysqlite3
+pysqlite3-binary
