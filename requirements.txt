@@ -25,3 +25,4 @@ slack-sdk
 pydub==0.25.1
 groq
 pysqlite3-binary
+sqlite3
