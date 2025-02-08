@@ -6,11 +6,70 @@ import streamlit.components.v1 as components
 import base64
 import os
 import sys
+import msal
+from urllib.parse import urlparse, parse_qs
 # __import__('pysqlite3')
 # import sys
 # sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
-# Add the src directory to the Python path
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+# MSAL Configuration
+CLIENT_ID = "2d0e9263-6a2b-4390-ad63-6ab2bc51f0b3"
+TENANT_ID = "b0133275-a144-4563-9cb9-36d91553e5d2"
+AUTHORITY = f"https://login.microsoftonline.com/{TENANT_ID}"
+REDIRECT_URI = "http://localhost:8501"
+SCOPES = ["User.Read"]
+
+
+# MSAL App Creation
+
+
+def create_msal_app():
+    app = msal.PublicClientApplication(
+        CLIENT_ID,
+        authority=AUTHORITY
+    )
+    return app
+
+# Check if the user is authenticated by checking for the token
+
+
+def is_authenticated():
+    return "access_token" in st.session_state
+
+# Redirect URL handling logic
+
+
+def handle_redirect():
+    query_params = parse_qs(urlparse(st.request.get_url()).query)
+    if "code" in query_params:
+        # The user is redirected here with a code
+        code = query_params["code"][0]
+        app = create_msal_app()
+        result = app.acquire_token_by_authorization_code(
+            code, SCOPES, redirect_uri=REDIRECT_URI)
+
+        if "access_token" in result:
+            # Store the access token securely in session state
+            st.session_state["access_token"] = result["access_token"]
+            st.success("Authentication successful!")
+            st.experimental_rerun()  # Reload the app to refresh the state
+        else:
+            st.error("Authentication failed. Please try again.")
+
+
+# Check authentication status on initial load
+if not is_authenticated():
+    # Redirect to MSAL for login if not authenticated
+    auth_url = create_msal_app().get_authorization_request_url(
+        SCOPES, redirect_uri=REDIRECT_URI, code_challenge="S256")
+    st.markdown(
+        f'<meta http-equiv="refresh" content="0;url={auth_url}" />', unsafe_allow_html=True)
+else:
+    # Proceed with your original logic if authenticated
+    st.success("You are authenticated!")
+
+    sys.path.append(os.path.dirname(
+        os.path.dirname(os.path.abspath(__file__))))
 # Add the src/ directory to the Python path
 
 
@@ -783,3 +842,7 @@ st.markdown("""
 
 st.markdown("""<footer>Made with ❤️ by Arieotech</footer>""",
             unsafe_allow_html=True)
+
+# Handle the redirect (this runs when MSAL sends back the code)
+handle_redirect()
+# Add the src directory to the Python path
