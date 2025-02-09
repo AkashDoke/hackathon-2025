@@ -45,6 +45,24 @@ image_paths = {
     "three": os.path.join(ASSETS_DIR, "3.png"),
     "four": os.path.join(ASSETS_DIR, "4.png"),
     "five": os.path.join(ASSETS_DIR, "5.png"),
+    "bot": os.path.join(ASSETS_DIR, "bot.gif"),
+
+    "Agentsops": os.path.join(ASSETS_DIR, "Agentsops.png"),
+    "Azureopenai": os.path.join(ASSETS_DIR, "Azureopenai.png"),
+    "crewai": os.path.join(ASSETS_DIR, "crewai.png"),
+    "Deepseek": os.path.join(ASSETS_DIR, "Deepseek.png"),
+    "GAIS": os.path.join(ASSETS_DIR, "GAIS.png"),
+
+   "GC": os.path.join(ASSETS_DIR, "GC.png"),
+    "Gemini": os.path.join(ASSETS_DIR, "Gemini.png"),
+    "crewai": os.path.join(ASSETS_DIR, "crewai.png"),
+    "Groq": os.path.join(ASSETS_DIR, "Groq.png"),
+    "JIRA": os.path.join(ASSETS_DIR, "JIRA.png"),
+
+    "Python": os.path.join(ASSETS_DIR, "Python.png"),
+    "Slack": os.path.join(ASSETS_DIR, "Slack.png"),
+    "streamlit": os.path.join(ASSETS_DIR, "streamlit.png"),
+    "Whisper": os.path.join(ASSETS_DIR, "Whisper.png"),
 }
 # Function to encode images to base64
 
@@ -373,8 +391,17 @@ st.markdown("""
             font-size:16px !important;
             height:300px;
             box-shadow: 0 .5rem 1rem rgba(0,0,0,.15);
+         
         }
-            .ai-info p{
+            .text-centers {
+               flex-flow:column;
+            display:flex;
+            align-items:center;
+            }
+            .text-end {
+              text-align:end;
+            }
+            .ai-info p {
             font-size:16px !important;
         }
            .ai-info img{
@@ -466,13 +493,19 @@ if st.session_state.page == "home":
             # AI-related content when no file is uploaded
             with col2:
                 st.markdown(
-                    """
-                    <div class="ai-info">
-                        <p>🤖 <strong>Did you know?</strong></br> AI-powered transcription tools use Natural Language Processing (NLP) and Speech Recognition to convert speech into text accurately.</p>
-                        <p>🎙️ Upload an audio file to see AI in action!</p>
-                        <img src="https://t3.ftcdn.net/jpg/05/59/87/12/360_F_559871209_pbXlOVArUal3mk6Ce60JuP13kmuIRCth.jpg" width="300" >
-                    </div>
-                    """, unsafe_allow_html=True
+                    f"""
+        <div class="ai-info">
+          <div class="text-centers">
+             <p>🤖 Did you know?</p></br>
+             <p><strong> Why did the AI break up with its chatbot girlfriend?</strong></p> 
+             <p>It felt like the conversation was too scripted!</p>
+          </div>           
+          <div class="text-end">
+             <img src="data:image/gif;base64,{encoded_images['bot']}" class="logo" alt="Arieotech">
+          </div>           
+        </div>
+        """,
+                    unsafe_allow_html=True
                 )
 
     # Show Actions section only if a file is uploaded
@@ -697,87 +730,82 @@ elif st.session_state.page == "ourteam":
 
     components.html(team_html, height=600)
 
-st.markdown("""
+st.markdown(f"""
     <style>
-        @keyframes slides {
-            from {
+        @keyframes slides {{
+            from {{
                 transform: translateX(0);
-            }
-            to {
+            }}
+            to {{
                 transform: translateX(-100%);
-            }
-        }
+            }}
+        }}
 
-        .logos {
+        .logos {{
             overflow: hidden;
-           padding: 7% 0px 46px 60px;
+            padding: 7% 0px 0px 60px;
             white-space: nowrap;
             position: relative;
             background: #fff;
- 
-        }
+        }}
 
-        .logos:before, .logos:after {
+        .logos:before, .logos:after {{
             position: absolute;
             top: 0;
             content: '';
             width: 250px;
             height: 100%;
             z-index: 2;
-        }
+        }}
 
-        .logos:before {
+        .logos:before {{
             left: 0;
             background: linear-gradient(to left, rgba(255,255,255,0), rgb(255, 255, 255));
-        }
+        }}
 
-        .logos:after {
+        .logos:after {{
             right: 0;
             background: linear-gradient(to right, rgba(255,255,255,0), rgb(255, 255, 255));
-        }
+        }}
 
-        .logo_items {
+        .logo_items {{
             display: inline-block;
             animation: 35s slides infinite linear;
-        }
+        }}
 
-        .logos:hover .logo_items {
+        .logos:hover .logo_items {{
             animation-play-state: paused;
-        }
+        }}
 
-        .logo_items img {
+        .logo_items img {{
             height: 100px;
             margin: 0 10px;
-        }
+        }}
     </style>
-
     <div class="logos">
         <div class="logo_items">
-            <img src="https://d34u8crftukxnk.cloudfront.net/slackpress/prod/sites/6/slack-logo-slide.png">
-            <img src="https://miro.medium.com/v2/resize:fit:1400/1*Ulg1BjUIxIdmOw63J5gF1Q.png">
-            <img src="https://miro.medium.com/v2/resize:fit:1200/1*srQdUu5yPUu6msmYr_-eQw.jpeg">
-            <img src="https://i0.wp.com/junilearning.com/wp-content/uploads/2020/06/python-programming-language.webp?fit=800%2C800&ssl=1">
-            <img src="https://media.licdn.com/dms/image/C5612AQEQc4mBtUSbUw/article-cover_image-shrink_600_2000/0/1606280532648?e=2147483647&v=beta&t=6r9dBiRXoaMRIEKZWZfG49NbKR_MiUYcYFijqNB8sSw">
-            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSo8uxvp_oaMdkstYS9gbtGfFIA34zTosaaAhUjPTpBdc0P_wd6m94ozZY0hBOkmg91lg&usqp=CAU">
-            <img src="https://store-images.s-microsoft.com/image/apps.64314.14423064005243201.ff003f01-b27e-4e67-9aa6-33c671187261.c7133ceb-d688-4f51-b158-23818ec236ff">
-            <img src="https://www.uscloud.com/wp-content/uploads/Azure-Open-AI.webp?v=5a">
-            <img src="https://pbs.twimg.com/profile_images/1837604284344807424/B7KYrv04_400x400.jpg">
-            <img src="https://bsmedia.business-standard.com/_media/bs/img/article/2025-01/27/full/1737959259-7169.png?im=FeatureCrop,size=(826,465)">
+            <img src="data:image/gif;base64,{encoded_images['Agentsops']}" class="logo" alt="Arieotech">
+            <img src="data:image/gif;base64,{encoded_images['Azureopenai']}" class="logo" alt="Arieotech">
+            <img src="data:image/gif;base64,{encoded_images['crewai']}" class="logo" alt="Arieotech">
+                   <img src="data:image/gif;base64,{encoded_images['Deepseek']}" class="logo" alt="Arieotech">
+            <img src="data:image/gif;base64,{encoded_images['GAIS']}" class="logo" alt="Arieotech">
+            <img src="data:image/gif;base64,{encoded_images['GC']}" class="logo" alt="Arieotech">
+                   <img src="data:image/gif;base64,{encoded_images['Gemini']}" class="logo" alt="Arieotech">
+            <img src="data:image/gif;base64,{encoded_images['crewai']}" class="logo" alt="Arieotech">
+            <img src="data:image/gif;base64,{encoded_images['Groq']}" class="logo" alt="Arieotech">
+                   <img src="data:image/gif;base64,{encoded_images['JIRA']}" class="logo" alt="Arieotech">
+            <img src="data:image/gif;base64,{encoded_images['Python']}" class="logo" alt="Arieotech">
+            <img src="data:image/gif;base64,{encoded_images['Slack']}" class="logo" alt="Arieotech">
+             <img src="data:image/gif;base64,{encoded_images['streamlit']}" class="logo" alt="Arieotech">
+              <img src="data:image/gif;base64,{encoded_images['Agentsops']}" class="logo" alt="Arieotech">
+            <img src="data:image/gif;base64,{encoded_images['Azureopenai']}" class="logo" alt="Arieotech">
+            <img src="data:image/gif;base64,{encoded_images['crewai']}" class="logo" alt="Arieotech">
+                   <img src="data:image/gif;base64,{encoded_images['Deepseek']}" class="logo" alt="Arieotech">
+            <img src="data:image/gif;base64,{encoded_images['GAIS']}" class="logo" alt="Arieotech">
+            <img src="data:image/gif;base64,{encoded_images['GC']}" class="logo" alt="Arieotech">
         </div>
-        <div class="logo_items">
-             <img src="https://d34u8crftukxnk.cloudfront.net/slackpress/prod/sites/6/slack-logo-slide.png">
-            <img src="https://miro.medium.com/v2/resize:fit:1400/1*Ulg1BjUIxIdmOw63J5gF1Q.png">
-            <img src="https://miro.medium.com/v2/resize:fit:1200/1*srQdUu5yPUu6msmYr_-eQw.jpeg">
-            <img src="https://i0.wp.com/junilearning.com/wp-content/uploads/2020/06/python-programming-language.webp?fit=800%2C800&ssl=1">
-            <img src="https://media.licdn.com/dms/image/C5612AQEQc4mBtUSbUw/article-cover_image-shrink_600_2000/0/1606280532648?e=2147483647&v=beta&t=6r9dBiRXoaMRIEKZWZfG49NbKR_MiUYcYFijqNB8sSw">
-            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSo8uxvp_oaMdkstYS9gbtGfFIA34zTosaaAhUjPTpBdc0P_wd6m94ozZY0hBOkmg91lg&usqp=CAU">
-            <img src="https://store-images.s-microsoft.com/image/apps.64314.14423064005243201.ff003f01-b27e-4e67-9aa6-33c671187261.c7133ceb-d688-4f51-b158-23818ec236ff">
-            <img src="https://www.uscloud.com/wp-content/uploads/Azure-Open-AI.webp?v=5a">
-            <img src="https://pbs.twimg.com/profile_images/1837604284344807424/B7KYrv04_400x400.jpg">
-            <img src="https://bsmedia.business-standard.com/_media/bs/img/article/2025-01/27/full/1737959259-7169.png?im=FeatureCrop,size=(826,465)">
-        </div>
+        
     </div>
 """, unsafe_allow_html=True)
 
-st.markdown("""<footer>Made with ❤️ by Arieotech</footer>""",
-            unsafe_allow_html=True)
+st.markdown("""<footer>Made with ❤️ by Arieotech</footer>""", unsafe_allow_html=True)
