@@ -1,5 +1,6 @@
 # llm_config.py
 from crewai import LLM
+from openai import OpenAI
 import os
 
 # Initialize LLM models with environment variables
@@ -14,8 +15,19 @@ azure_llm = LLM(
     api_key=os.getenv("AZURE_OPENAI_KEY")
 )
 
+azure_llm_4o_mini = LLM(
+    model=os.getenv("AZURE_OPENAI_MODEL_MINI"),
+    base_url=os.getenv("AZURE_OPENAI_BASEURL"),
+    api_key=os.getenv("AZURE_OPENAI_KEY")
+)
+
 deepseak_llm = LLM(
     base_url=os.getenv("OLLAMA_BASE_URL"),
     temperature=0.7,
     model=os.getenv("OLLAMA_MODEL")
+)
+
+openai_llm = LLM(
+    model=os.getenv("MODEL"),
+    api_key=os.getenv("OPENAI_API_KEY")
 )

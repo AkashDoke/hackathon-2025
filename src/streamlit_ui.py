@@ -5,9 +5,9 @@ import streamlit.components.v1 as components
 import base64
 import os
 import sys
-__import__('pysqlite3')
-import sys
-sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
+# __import__('pysqlite3')
+# import sys
+# sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
 # Add the src directory to the Python path
 #sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 # Add the src/ directory to the Python path
@@ -328,6 +328,7 @@ if st.session_state.page == "home":
 
             with st.spinner("Processing your file..."):
                 transcription = meeting_minutes_flow.transcribe_meeting(uploaded_file.read())
+                data = meeting_minutes_flow.generate_meeting_minutes_jira_tasks()
                 st.success("Transcription Complete!")
                 st.text_area("Meeting Transcript", transcription, height=200)
 

@@ -3,6 +3,7 @@ import os
 import agentops
 import streamlit as st
 import io
+import json
 
 os.environ["OTEL_SDK_DISABLED"] = "true"
 
@@ -11,6 +12,7 @@ from pydantic import BaseModel
 from meeting_recordings_analysis.agents import Agents
 from meeting_recordings_analysis.tasks import Tasks
 from crewai import Crew , LLM
+from crewai.flow.flow import listen
 from pydub import AudioSegment
 from pydub.utils import make_chunks
 
@@ -34,9 +36,10 @@ class MeetingMinutesState(BaseModel):
     meeting_minutes: str = ""
     meeting_minutes_faq: str = ""
     meeting_minutes_jira_tasks: str = ""
+    trimmed_markdown: str =""
 
-openai_api_key = os.getenv("OPENAI_API_KEY")
-client = OpenAI(api_key=openai_api_key)
+# openai_api_key = os.getenv("OPENAI_API_KEY")
+# client = OpenAI(api_key=openai_api_key)
 
 
 class MeetingMinutesFlow:
@@ -152,34 +155,53 @@ Transcription: Good afternoon, everyone, and welcome to FinTech Plus Sync's 2nd 
   - **Assignee**: Executive Assistant to the CEO
   - **Due Date**: 2023-08-25
 ```"""
+            # self.trimmed_markdown = result
+            trimmed_markdown = str(result).strip("```").strip()
 
-            if result:
-                trimmed_markdown = str(result).strip("```").strip()
-                story = parse_markdown(trimmed_markdown)
+            
+            # inputs = {
+            #     "body": trimmed_markdown
+            # }
 
-                sprint_id = get_active_sprint_id()     
+            # print("trimmed_markdown", trimmed_markdown)          
 
-                if sprint_id:
-                    print(sprint_id)
-                    story_id = create_jira_issue(story) 
-                    print(story_id)
+            jira_draft_agent = self.agents.jira_draft_agent()
+            jira_draft_task = self.tasks.jira_draft_task(jira_draft_agent, trimmed_markdown)
 
-                    task_ids = []
+            jira_crew = Crew(agents=[jira_draft_agent], tasks=[jira_draft_task])
+            jira_crew.kickoff()
 
-                    for task in story['tasks']:
-                        task_id = create_jira_task(task)
-                        task_ids.append(task_id)
 
-                    add_to_sprint(sprint_id, [story_id] + task_ids)
-                    print("successfully creted jira stories")
+            # if result:
+            #     trimmed_markdown = str(result).strip("```").strip()
+            #     story = parse_markdown(trimmed_markdown)
 
-            else:
-                print("Kickoff did not complete successfully. Skipping subsequent steps.")
+            #     sprint_id = get_active_sprint_id()     
+
+            #     if sprint_id:
+            #         print(sprint_id)
+            #         story_id = create_jira_issue(story) 
+            #         print(story_id)
+
+            #         task_ids = []
+
+            #         for task in story['tasks']:
+            #             task_id = create_jira_task(task)
+            #             task_ids.append(task_id)
+
+            #         add_to_sprint(sprint_id, [story_id] + task_ids)
+            #         print("successfully creted jira stories")
+
+            # else:
+            #     print("Kickoff did not complete successfully. Skipping subsequent steps.")
 
             return result
         except Exception as e:
             print(f"An error occurred: {e}")
             return None
+        
+
+
 
 # Create an instance of the flow
 meeting_minutes_flow = MeetingMinutesFlow()

@@ -3,7 +3,7 @@ from meeting_recordings_analysis.tools.gmail_custom_tool import GmailCustomTool
 from meeting_recordings_analysis.tools.jira_custom_tool import JiraCustomTool
 from meeting_recordings_analysis.tools.slack_custom_tool import SlackCustomTool
 from crewai_tools import FileWriterTool
-from meeting_recordings_analysis.llm_config import azure_llm, google_llm, deepseak_llm
+from meeting_recordings_analysis.llm_config import azure_llm, google_llm, deepseak_llm, azure_llm_4o_mini, openai_llm
 
 file_writer_faq = FileWriterTool(file_name='faq.txt', directory='hackathon-2025')
 
@@ -38,7 +38,7 @@ class Agents():
             role="CrewAI Jira Story Creator",
             goal="""Transform FAQ content into a well-structured Jira story, breaking it down into actionable tasks and sub-tasks. Ensure each task is clear, achievable, and mapped to the context of the FAQ.""",
             backstory= """You are an experienced project manager with a deep understanding of agile workflows. Your task is to take the FAQ content provided and extract key tasks that align with the overall goals. You will then create a Jira story that reflects the broader project, detailing the necessary tasks with proper assignees, due dates, and priorities. Your work ensures that each task derived from the FAQ is actionable and serves as a step toward achieving the larger goal.""",
-            llm=azure_llm,
+            llm=azure_llm_4o_mini,
             tools=[JiraCustomTool()]
             )
     
@@ -70,12 +70,16 @@ class Agents():
             llm=azure_llm
             )
     
-    def jira_ticket_agent(self):
+    def jira_draft_agent(self):
            return Agent(
-           role="Jira Ticket Agent",
-           goal="""Take markdown input from another crew, send it to a tool as-is, and create a ticket.""",
-           backstory="""You are an expert in handling markdown inputs and integrating with ticketing systems.""",
-           tools=[JiraCustomTool()],  # Replace with the appropriate tool for interacting with Jira
-           llm=deepseak_llm
-            )
+           role="Jira Draft Agent",
+           goal="""Create a Jira ticket using the provided input""",
+            backstory=(
+        "You are an AI agent specialized in creating Jira tickets. "
+        "You can process input strings and interact with Jira's API to create tasks."
+           ),
+           tools=[JiraCustomTool()],
+           llm=azure_llm,
+           verbose=True
+           )
     

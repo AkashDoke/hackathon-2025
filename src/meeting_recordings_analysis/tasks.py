@@ -155,7 +155,9 @@ class Tasks():
     Additionally, ensure that the story and tasks are logically connected to the content of the FAQ.
             """),
             tools=[JiraCustomTool()],
-            expected_output=("""A well-structured Jira story with detailed tasks and sub-tasks based on the FAQ content. The story should provide a clear overview and actionable steps for implementation."""),
+            expected_output=("""A well-structured Jira story with detailed tasks and sub-tasks based on the FAQ content. 
+                             The story should provide a clear overview and actionable steps for implementation.
+                             Formatted as markdown without '```'"""),
             agent=agent,
         )
     
@@ -195,7 +197,8 @@ class Tasks():
     
     def jira_draft_task(self, agent, body):
         return Task(
-            description=(f"""Take the markdown input from another crew, send it to the tool as-is  using the provided body: {body}"""),
-            expected_output=("""A ticket created successfully with the provided markdown content."""),
+            description=(f"""Create a Jira issue based on the input string : {body}"""),
+            expected_output=("""To return whether the Jira ticket was created successfully or not"""),
             agent=agent,
+            tools=[JiraCustomTool()]
         )
