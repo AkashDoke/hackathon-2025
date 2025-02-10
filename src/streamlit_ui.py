@@ -281,6 +281,12 @@ header_html = f"""
             border-color: #009cdb !important;
         }}
     }}
+
+    @media screen and (max-width: 800px){{
+        .stCustomComponentV1.st-emotion-cache-1tvzk6f.e1begtbc0{{
+        height:120px;
+    }}
+}}
 </style>
 
 
@@ -490,7 +496,6 @@ if st.session_state.page == "home":
                 st.text_area("Meeting Transcript", transcription, height=200)
                 st.success("Transcription Complete!")
         else:
-            # AI-related content when no file is uploaded
             with col2:
                 st.markdown(
                     f"""
@@ -503,12 +508,11 @@ if st.session_state.page == "home":
           <div class="text-end">
              <img src="data:image/gif;base64,{encoded_images['bot']}" class="logo" alt="Arieotech">
           </div>           
-        </div>
+        </div>    
         """,
-                    unsafe_allow_html=True
+             unsafe_allow_html=True
                 )
-
-    # Show Actions section only if a file is uploaded
+              
     if uploaded_file:
         st.markdown(
             '<p style="padding-left:30px; font-weight: 600;font-size: 22px;">Actions</p>', unsafe_allow_html=True)
@@ -641,7 +645,7 @@ elif st.session_state.page == "ourteam":
     border-radius: 15px;
     padding: 25px;
     width: 280px;  
-    height: 380px; /* Adjusted height */
+    height: 300px; /* Adjusted height */
     text-align: center;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -728,7 +732,7 @@ elif st.session_state.page == "ourteam":
         """
     team_html += '</div>'
 
-    components.html(team_html, height=600)
+    components.html(team_html, height=450)
 
 st.markdown(f"""
     <style>
