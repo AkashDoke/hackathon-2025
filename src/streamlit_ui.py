@@ -53,7 +53,7 @@ image_paths = {
     "Deepseek": os.path.join(ASSETS_DIR, "Deepseek.png"),
     "GAIS": os.path.join(ASSETS_DIR, "GAIS.png"),
 
-   "GC": os.path.join(ASSETS_DIR, "GC.png"),
+    "GC": os.path.join(ASSETS_DIR, "GC.png"),
     "Gemini": os.path.join(ASSETS_DIR, "Gemini.png"),
     "crewai": os.path.join(ASSETS_DIR, "crewai.png"),
     "Groq": os.path.join(ASSETS_DIR, "Groq.png"),
@@ -477,6 +477,23 @@ if st.session_state.page == "home":
     </div>
 """, unsafe_allow_html=True)
 
+    jokes = [
+        "🤖 Why did the AI break up with its chatbot girlfriend? <br> It felt like the conversation was too scripted!",
+        "🧠 Why did the neural network go to therapy? <br> It had too many layers of emotional baggage!",
+        "💻 Why was the computer cold? <br> It left its Windows open!",
+        "📡 Why don’t robots get scared? <br> Because they have nerves of steel!",
+        "🎭 What do you call an AI that can sing? <br> A deep-learner!"
+    ]
+
+    # Auto-refresh every 3 seconds
+    st_autorefresh(interval=5000, key="joke_refresh")
+
+    # Session state to track joke index
+    if "joke_index" not in st.session_state:
+        st.session_state["joke_index"] = 0
+    else:
+        st.session_state["joke_index"] = (
+            st.session_state["joke_index"] + 1) % len(jokes)
     col1, col2 = st.columns([4, 8])
 
     uploaded_file = None
@@ -497,22 +514,21 @@ if st.session_state.page == "home":
                 st.success("Transcription Complete!")
         else:
             with col2:
+                # Display dynamically changing joke
                 st.markdown(
                     f"""
-        <div class="ai-info">
-          <div class="text-centers">
-             <p>🤖 Did you know?</p></br>
-             <p><strong> Why did the AI break up with its chatbot girlfriend?</strong></p> 
-             <p>It felt like the conversation was too scripted!</p>
-          </div>           
-          <div class="text-end">
-             <img src="data:image/gif;base64,{encoded_images['bot']}" class="logo" alt="Arieotech">
-          </div>           
-        </div>    
-        """,
-             unsafe_allow_html=True
+                    <div class="ai-info">
+                        <div class="text-centers">
+                            <p>{jokes[st.session_state['joke_index']]}</p>
+                        </div>           
+                        <div class="text-end">
+                            <img src="data:image/gif;base64,{encoded_images['bot']}" class="logo" alt="Arieotech">
+                        </div>           
+                    </div>    
+                    """,
+                    unsafe_allow_html=True
                 )
-              
+
     if uploaded_file:
         st.markdown(
             '<p style="padding-left:30px; font-weight: 600;font-size: 22px;">Actions</p>', unsafe_allow_html=True)
@@ -813,4 +829,5 @@ st.markdown(f"""
     </div>
 """, unsafe_allow_html=True)
 
-st.markdown("""<footer>Made with ❤️ by Arieotech</footer>""", unsafe_allow_html=True)
+st.markdown("""<footer>Made with ❤️ by Arieotech</footer>""",
+            unsafe_allow_html=True)
