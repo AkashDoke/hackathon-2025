@@ -7,6 +7,7 @@ import base64
 import os
 import sys
 from streamlit_autorefresh import st_autorefresh
+import random
 # __import__('pysqlite3')
 # import sys
 # sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
@@ -35,8 +36,8 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # This is "src/demo/"
 ASSETS_DIR = os.path.join(BASE_DIR, "meeting_recordings_analysis/assets")
 
 image_paths = {
-    "one": os.path.join(ASSETS_DIR, "one.png"),
-    "two": os.path.join(ASSETS_DIR, "two.png"),
+    "one": os.path.join(ASSETS_DIR, "1.png"),
+    "two": os.path.join(ASSETS_DIR, "2.png"),
     "LOGO_PATH": os.path.join(ASSETS_DIR, "arieo-animated.gif"),
     "Abhi": os.path.join(ASSETS_DIR, "Abhi.png"),
     "akash": os.path.join(ASSETS_DIR, "akash.png"),
@@ -400,12 +401,17 @@ st.markdown("""
             font-size:16px !important;
             height:300px;
             box-shadow: 0 .5rem 1rem rgba(0,0,0,.15);
-         
+            flex-flow: column;
+            display: flex;
+            position:relative; 
+            align-items:center;
+            padding-top:50px;
         }
             .text-centers {
-               flex-flow:column;
+            flex-flow:column;
             display:flex;
             align-items:center;
+             margin-bottom:20px
             }
             .text-end {
               text-align:end;
@@ -414,7 +420,10 @@ st.markdown("""
             font-size:16px !important;
         }
            .ai-info img{
-            height:168px
+            height:168px;
+            position:absolute;
+            bottom:10px;
+            right:10px;
             }
             .stCustomComponentV1.st-emotion-cache-1tvzk6f.e1begtbc0{
             margin-top:20px
@@ -481,23 +490,30 @@ if st.session_state.page == "home":
 """, unsafe_allow_html=True)
 
     jokes = [
-        "🤖 Why did the AI break up with its chatbot girlfriend? <br> It felt like the conversation was too scripted!",
-        "🧠 Why did the neural network go to therapy? <br> It had too many layers of emotional baggage!",
-        "💻 Why was the computer cold? <br> It left its Windows open!",
-        "📡 Why don’t robots get scared? <br> Because they have nerves of steel!",
-        "🎭 What do you call an AI that can sing? <br> A deep-learner!"
+        {"question": "🤖 Why did the AI break up with its chatbot girlfriend?",
+            "answer": "It felt like the conversation was too scripted!"},
+        {"question": "🧠 Why don’t AI assistants ever get lost?",
+            "answer": "Because they always follow the algorithm!"},
+        {"question": "💻 Why did the neural network go to therapy?",
+            "answer": "It had too many layers of unresolved issues!"},
+        {"question": "📡 Did you hear about the AI that became a poet?",
+            "answer": "It had great rhyme and reason!!"},
+        {"question": "🎭 I asked AI to write a joke about itself…",
+            "answer": "It replied, I'm still learning, but at least I don't crash like Windows!"}
     ]
 
     # Auto-refresh every 3 seconds
-    st_autorefresh(interval=5000, key="joke_refresh")
+    st_autorefresh(interval=3000, key="joke_refresh")
 
     # Session state to track joke index
-    if "joke_index" not in st.session_state:
-        st.session_state["joke_index"] = 0
-    else:
-        st.session_state["joke_index"] = (
-            st.session_state["joke_index"] + 1) % len(jokes)
-    col1, col2 = st.columns([4, 8])
+    if "current_joke" not in st.session_state:
+        st.session_state["current_joke"] = random.choice(
+            jokes)  # Initialize with a random joke
+
+# Update the joke on each refresh
+    st.session_state["current_joke"] = random.choice(jokes)
+
+    col1, col2 = st.columns([5, 7])
 
     uploaded_file = None
     transcription = ""
@@ -518,17 +534,19 @@ if st.session_state.page == "home":
         else:
             with col2:
                 # Display dynamically changing joke
+                # Get the current joke
+                current_joke = st.session_state["current_joke"]
                 st.markdown(
                     f"""
-                    <div class="ai-info">
-                        <div class="text-centers">
-                            <p>{jokes[st.session_state['joke_index']]}</p>
-                        </div>           
-                        <div class="text-end">
-                            <img src="data:image/gif;base64,{encoded_images['bot']}" class="logo" alt="Arieotech">
-                        </div>           
-                    </div>    
-                    """,
+                <div class="ai-info">
+                 <p>🤖 Did you know?</p></br>
+                  <div class="text-centers">
+                          <p style="font-weight: bold; font-size: 1.2em; margin-bottom:10px">{current_joke['question']}</p>  <p style="font-size: 1.1em;">{current_joke['answer']}</p>      </div>
+                  <div class="text-end">
+                          <img src="data:image/gif;base64,{encoded_images['bot']}" class="logo" alt="Arieotech">
+                 </div>
+                </div>
+                """,
                     unsafe_allow_html=True
                 )
 
