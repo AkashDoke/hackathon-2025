@@ -749,10 +749,11 @@ st.markdown(f"""
 
         .logos {{
             overflow: hidden;
-            padding: 7% 0px 0px 60px;
+            padding: 0px 0px 0px 60px;
             white-space: nowrap;
             position: relative;
             background: #fff;
+            margin-top:160px;
         }}
 
         .logos:before, .logos:after {{
