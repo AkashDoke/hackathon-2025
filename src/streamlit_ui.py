@@ -531,18 +531,20 @@ if st.session_state.page == "home":
             with col2:
                 # Display dynamically changing joke
                 # Get the current joke
-                current_joke = st.session_state["current_joke"]
+                # current_joke = st.session_state["current_joke"]
                 st.markdown(
                     f"""
-                <div class="ai-info">
-                 <p>🤖 Did you know?</p></br>
-                  <div class="text-centers">
-                          <p style="font-weight: bold; font-size: 1.2em; margin-bottom:10px">{current_joke['question']}</p>  <p style="font-size: 1.1em;">{current_joke['answer']}</p>      </div>
-                  <div class="text-end">
-                          <img src="data:image/gif;base64,{encoded_images['bot']}" class="logo" alt="Arieotech">
-                 </div>
-                </div>
-                """,
+               <div class="ai-info">
+          <div class="text-centers">
+             <p>🤖 Did you know?</p></br>
+             <p><strong> Why did the AI break up with its chatbot girlfriend?</strong></p> 
+             <p>It felt like the conversation was too scripted!</p>
+          </div>           
+          <div class="text-end">
+             <img src="data:image/gif;base64,{encoded_images['bot']}" class="logo" alt="Arieotech">
+          </div>           
+        </div>    
+        """,
                     unsafe_allow_html=True
                 )
 
