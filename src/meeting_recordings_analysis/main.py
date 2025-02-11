@@ -20,7 +20,8 @@ os.environ["OTEL_SDK_DISABLED"] = "true"
 
 load_dotenv()
 
-agentops.init(api_key=os.getenv("AGENT_OPS_KEY"), skip_auto_end_session=True)
+session = agentops.init(api_key=os.getenv(
+    "AGENT_OPS_KEY"), skip_auto_end_session=True)
 
 # MSAL Authentication Configuration
 CLIENT_ID = os.getenv("CLIENT_ID")
@@ -145,6 +146,7 @@ class MeetingMinutesFlow:
 
                     add_to_sprint(sprint_id, [story_id] + task_ids)
                     print("successfully creted jira stories")
+                    session.end_session()
 
             else:
                 print(

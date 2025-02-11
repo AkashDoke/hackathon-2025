@@ -638,7 +638,7 @@ if st.session_state.page == "home":
 
 elif st.session_state.page == "ourteam":
 
-    st.markdown('<p style="padding-left:30px; font-weight: 600;font-size: 22px;">Meet our awesome team at Arieotech!</p>', unsafe_allow_html=True)
+    st.markdown('<p style="padding-left:30px; font-weight: 600;font-size: 22px;margin-top:20px">Meet our awesome team at Arieotech!</p>', unsafe_allow_html=True)
     team_members = [
         {"name": "Akash Doke",
          "image": encoded_images["akash"],
