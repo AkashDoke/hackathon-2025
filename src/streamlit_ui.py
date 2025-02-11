@@ -1,4 +1,3 @@
-from meeting_recordings_analysis.main import meeting_minutes_flow
 import streamlit as st
 from streamlit.components.v1 import html
 from streamlit_carousel import carousel
@@ -7,8 +6,8 @@ import base64
 import os
 import sys
 # __import__('pysqlite3')
-# import sys
 # sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
+from meeting_recordings_analysis.main import meeting_minutes_flow
 # Add the src directory to the Python path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 # Add the src/ directory to the Python path
