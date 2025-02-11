@@ -498,16 +498,16 @@ if st.session_state.page == "home":
             "answer": "It replied, I'm still learning, but at least I don't crash like Windows!"}
     ]
 
-    # Auto-refresh every 3 seconds
-    st_autorefresh(interval=3000, key="joke_refresh")
+    # # Auto-refresh every 3 seconds
+    # st_autorefresh(interval=3000, key="joke_refresh")
 
-    # Session state to track joke index
-    if "current_joke" not in st.session_state:
-        st.session_state["current_joke"] = random.choice(
-            jokes)  # Initialize with a random joke
+    # # Session state to track joke index
+    # if "current_joke" not in st.session_state:
+    #     st.session_state["current_joke"] = random.choice(
+    #         jokes)  # Initialize with a random joke
 
 # Update the joke on each refresh
-    st.session_state["current_joke"] = random.choice(jokes)
+    # st.session_state["current_joke"] = random.choice(jokes)
 
     col1, col2 = st.columns([5, 7])
 
