@@ -32,7 +32,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # This is "src/demo/"
 ASSETS_DIR = os.path.join(BASE_DIR, "meeting_recordings_analysis/assets")
 
 image_paths = {
-    "one": os.path.join(ASSETS_DIR, "1.png"),
+    "one": os.path.join(ASSETS_DIR, "ollama deepseek.png"),
     "two": os.path.join(ASSETS_DIR, "2.png"),
     "LOGO_PATH": os.path.join(ASSETS_DIR, "arieo-animated.gif"),
     "Abhi": os.path.join(ASSETS_DIR, "Abhi.png"),
@@ -465,15 +465,15 @@ if st.session_state.page == "home":
     """, unsafe_allow_html=True)
 
     carousel_items = [
-        {"title": "Ollama: llm model", "text": "AI-powered solutions for meeting minutes and transcription.",
+        {"title": "", "text": "",
             "img": f"data:image/png;base64,{encoded_images['one']}"},
-        {"title": "Real-time Transcription", "text": "Get accurate transcriptions instantly.",
+        {"title": "", "text": "",
             "img": f"data:image/png;base64,{encoded_images['two']}"},
-        {"title": "Summarization", "text": "Generate concise summaries with AI.",
+        {"title": "", "text": "",
             "img": f"data:image/png;base64,{encoded_images['three']}"},
-        {"title": "Collaboration", "text": "Share and collaborate on meeting notes effortlessly.",
+        {"title": "", "text": "",
             "img": f"data:image/png;base64,{encoded_images['four']}"},
-        {"title": "Collaboration", "text": "Share and collaborate on meeting notes effortlessly.",
+        {"title": "", "text": "",
             "img": f"data:image/png;base64,{encoded_images['five']}"}
     ]
     carousel(items=carousel_items)
