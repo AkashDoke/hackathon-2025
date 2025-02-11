@@ -20,7 +20,7 @@ os.environ["OTEL_SDK_DISABLED"] = "true"
 
 load_dotenv()
 
-# agentops.init(api_key=os.getenv("AGENT_OPS_KEY"), skip_auto_end_session=True)
+agentops.init(api_key=os.getenv("AGENT_OPS_KEY"), skip_auto_end_session=True)
 
 # MSAL Authentication Configuration
 CLIENT_ID = os.getenv("CLIENT_ID")
@@ -37,8 +37,9 @@ class MeetingMinutesState(BaseModel):
     meeting_minutes_faq: str = ""
     meeting_minutes_jira_tasks: str = ""
 
-# openai_api_key = os.getenv("OPENAI_API_KEY")
-# client = OpenAI(api_key=openai_api_key)
+
+openai_api_key = os.getenv("OPENAI_API_KEY")
+client = OpenAI(api_key=openai_api_key)
 
 
 class MeetingMinutesFlow:
@@ -51,32 +52,28 @@ class MeetingMinutesFlow:
         print("Generating Transcription")
 
         # Working codebase
-        # audio_file = io.BytesIO(file_content)
-        # audio = AudioSegment.from_file(audio_file, format="wav")
+        audio_file = io.BytesIO(file_content)
+        audio = AudioSegment.from_file(audio_file, format="wav")
 
-        # # # Define chunk length in milliseconds (e.g., 1 minute = 60,000 ms)
-        # chunk_length_ms = 60000
-        # chunks = make_chunks(audio, chunk_length_ms)
+        # # Define chunk length in milliseconds (e.g., 1 minute = 60,000 ms)
+        chunk_length_ms = 60000
+        chunks = make_chunks(audio, chunk_length_ms)
 
-        # # Transcribe each chunk
-        # full_transcription = ""
-        # for i, chunk in enumerate(chunks):
-        #     print(f"Transcribing chunk {i+1}/{len(chunks)}")
-        #     chunk_path = f"chunk_{i}.wav"
-        #     chunk.export(chunk_path, format="wav")
+        # Transcribe each chunk
+        full_transcription = ""
+        for i, chunk in enumerate(chunks):
+            print(f"Transcribing chunk {i+1}/{len(chunks)}")
+            chunk_path = f"chunk_{i}.wav"
+            chunk.export(chunk_path, format="wav")
 
-        #     with open(chunk_path, "rb") as audio_file:
-        #         transcription = client.audio.transcriptions.create(
-        #             model="whisper-1",
-        #             file=audio_file
-        #         )
-        #         full_transcription += transcription.text + " "
-
-        # print(full_transcription)
+            with open(chunk_path, "rb") as audio_file:
+                transcription = client.audio.transcriptions.create(
+                    model="whisper-1",
+                    file=audio_file
+                )
+                full_transcription += transcription.text + " "
 
         # Simulated full transcription
-        full_transcription = """Good afternoon, everyone, and welcome to FinTech Plus Sync's 2nd quarter 2023 earnings call. I'm John Doe, CEO of FinTech Plus. We've had a stellar Q2 with a revenue of $125 million, a 25% increase year over year. Our gross profit margin stands at a solid 58%, due in part to cost efficiencies gained from our scalable business model. Our EBITDA has surged to $37.5 million, translating to a remarkable 30% EBITDA margin. Our net income for the quarter rose to $16 million, which is a noteworthy increase from $10 million in Q2 2022. Our total addressable market has grown substantially, thanks to the expansion of our high-yield savings product line and the new RoboAdvisor platform. We've been diversifying our asset-backed securities portfolio, investing heavily in collateralized debt obligations and residential mortgage-backed securities. We've also invested $25 million in AAA-rated corporate bonds, enhancing our risk-adjusted returns. As for our balance sheet, total assets reached $1.5 billion with total liabilities at $900 million, leaving us with a solid equity base of $600 million. Our debt to equity ratio stands at 1.5, a healthy figure considering our expansionary phase. We continue to see substantial organic user growth, with customer acquisition cost dropping by 15% and lifetime value growing by 25%. Our LTVCAC ratio is at an impressive 3.5x. In terms of risk management, we have a value-at-risk model in place with a 99% confidence level indicating that our maximum loss will not exceed 5 million in the next trading day. We've adopted a conservative approach to managing our leverage and have a healthy tier one capital ratio of 12.5%. Our forecast for the coming quarter is positive. We expect revenue to be around 135 million and 8% quarter over quarter growth driven primarily by our cutting edge blockchain solutions and AI driven predictive analytics. We're also excited about the upcoming IPO of our FinTech subsidiary Pay Plus, which we expect to raise 200 million. Significantly bolstering our liquidity and paving the way for aggressive growth strategies. We thank our shareholders for their continued faith in us and we look forward to an even more successful Q3. Thank you so much.
-Transcription: Good afternoon, everyone, and welcome to FinTech Plus Sync's 2nd quarter 2023 earnings call. I'm John Doe, CEO of FinTech Plus. We've had a stellar Q2 with a revenue of $125 million, a 25% increase year over year. Our gross profit margin stands at a solid 58%, due in part to cost efficiencies gained from our scalable business model. Our EBITDA has surged to $37.5 million, translating to a remarkable 30% EBITDA margin. Our net income for the quarter rose to $16 million, which is a noteworthy increase from $10 million in Q2 2022. Our total addressable market has grown substantially, thanks to the expansion of our high-yield savings product line and the new RoboAdvisor platform. We've been diversifying our asset-backed securities portfolio, investing heavily in collateralized debt obligations and residential mortgage-backed securities. We've also invested $25 million in AAA-rated corporate bonds, enhancing our risk-adjusted returns. As for our balance sheet, total assets reached $1.5 billion with total liabilities at $900 million, leaving us with a solid equity base of $600 million. Our debt to equity ratio stands at 1.5, a healthy figure considering our expansionary phase. We continue to see substantial organic user growth, with customer acquisition cost dropping by 15% and lifetime value growing by 25%. Our LTVCAC ratio is at an impressive 3.5x. In terms of risk management, we have a value-at-risk model in place with a 99% confidence level indicating that our maximum loss will not exceed 5 million in the next trading day. We've adopted a conservative approach to managing our leverage and have a healthy tier one capital ratio of 12.5%. Our forecast for the coming quarter is positive. We expect revenue to be around 135 million and 8% quarter over quarter growth driven primarily by our cutting edge blockchain solutions and AI driven predictive analytics. We're also excited about the upcoming IPO of our FinTech subsidiary Pay Plus, which we expect to raise 200 million. Significantly bolstering our liquidity and paving the way for aggressive growth strategies. We thank our shareholders for their continued faith in us and we look forward to an even more successful Q3. Thank you so much."""
         self.state.transcript = full_transcription
         return full_transcription
 
@@ -119,51 +116,21 @@ Transcription: Good afternoon, everyone, and welcome to FinTech Plus Sync's 2nd 
 
     def generate_meeting_minutes_jira_tasks(self):
         try:
-            # jira_agent = self.agents.summarizer_jira_agent()
-            # jira_task = self.tasks.summarizer_jira_agent_task(jira_agent, self.state.transcript)
+            jira_agent = self.agents.summarizer_jira_agent()
+            jira_task = self.tasks.summarizer_jira_agent_task(
+                jira_agent, self.state.transcript)
 
-            # crew = Crew(agents=[jira_agent], tasks=[jira_task])
-            # result = crew.kickoff()
+            crew = Crew(agents=[jira_agent], tasks=[jira_task])
+            result = crew.kickoff()
 
             # print("jira_agent_result", result)
-
-            result = """```
-**Story Title**: Q2 2023 Financial Performance Review and Strategy Implementation
-
-**Story Description**: This story outlines the necessary tasks to review Q2 2023 financial performance and implement strategies for continued growth following the earnings call. We aim to capitalize on the positive results and prepare for upcoming quarter forecasts and the IPO.
-
-**Tasks**:
-- Task 1: Review Q2 2023 financial performance metrics.
-  - **Priority**: High
-  - **Assignee**: Finance Team Lead
-  - **Due Date**: 2023-08-01
-- Task 2: Analyze customer acquisition strategies and outline improvements based on a 15% drop in costs.
-  - **Priority**: Medium
-  - **Assignee**: Marketing Manager
-  - **Due Date**: 2023-08-15
-- Task 3: Develop risk management framework based on the value-at-risk model and current financial data.
-  - **Priority**: High
-  - **Assignee**: Risk Management Officer
-  - **Due Date**: 2023-08-10
-- Task 4: Create strategic plan for upcoming IPO of Pay Plus, including investment requirements and expected outcomes.
-  - **Priority**: High
-  - **Assignee**: Strategy Director
-  - **Due Date**: 2023-08-30
-- Task 5: Assess opportunities in blockchain solutions and AI predictive analytics to drive growth for Q3.
-  - **Priority**: Medium
-  - **Assignee**: Head of Innovation
-  - **Due Date**: 2023-08-20
-- Task 6: Prepare presentation summarizing Q2 results and Q3 forecasts for stakeholders.
-  - **Priority**: High
-  - **Assignee**: Executive Assistant to the CEO
-  - **Due Date**: 2023-08-25
-```"""
 
             if result:
                 trimmed_markdown = str(result).strip("```").strip()
                 story = parse_markdown(trimmed_markdown)
 
                 sprint_id = get_active_sprint_id()
+                print(sprint_id)
 
                 if sprint_id:
                     print(sprint_id)

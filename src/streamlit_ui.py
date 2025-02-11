@@ -23,7 +23,8 @@ if "page" in query_params:
     st.session_state.page = query_params["page"]
 
 # Set up the page
-st.set_page_config(page_title="Meeting Minutes Generator", layout="wide")
+st.set_page_config(page_title="Meeting Minutes Generator",
+                   page_icon=":calendar:", layout="wide")
 
 # Custom logo path
 
