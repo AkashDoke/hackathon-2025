@@ -4,9 +4,9 @@ from streamlit_carousel import carousel
 import streamlit.components.v1 as components
 import base64
 import os
-__import__('pysqlite3')
-import sys
-sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
+# __import__('pysqlite3')
+# import sys
+# sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
 from meeting_recordings_analysis.main import meeting_minutes_flow
 # Add the src directory to the Python path
 # sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -44,9 +44,9 @@ image_paths = {
     "Linkedin": os.path.join(ASSETS_DIR, "Linkedin.png"),
     "Github": os.path.join(ASSETS_DIR, "Github.png"),
     "email": os.path.join(ASSETS_DIR, "email.png"),
-    "three": os.path.join(ASSETS_DIR, "3.png"),
-    "four": os.path.join(ASSETS_DIR, "4.png"),
-    "five": os.path.join(ASSETS_DIR, "5.png"),
+    "three": os.path.join(ASSETS_DIR, "Banner3.png"),
+    "four": os.path.join(ASSETS_DIR, "Banner4.png"),
+    "five": os.path.join(ASSETS_DIR, "Banner 5.png"),
     "bot": os.path.join(ASSETS_DIR, "bot.gif"),
 
     "Agentsops": os.path.join(ASSETS_DIR, "Agentsops.png"),
