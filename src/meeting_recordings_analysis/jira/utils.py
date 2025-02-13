@@ -303,3 +303,6 @@ def create_jira_task(task):
     else:
         print(f"Error creating task: {response.content}")
         return None
+
+def chunk_text(text, chunk_size=500):
+    return [text[i:i+chunk_size] for i in range(0, len(text), chunk_size)]

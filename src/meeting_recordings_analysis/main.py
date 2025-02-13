@@ -1,6 +1,6 @@
 from crewai import Crew, LLM
 from dotenv import load_dotenv
-from meeting_recordings_analysis.jira.utils import parse_markdown, create_jira_issue, create_jira_task, get_active_sprint_id, add_to_sprint
+from meeting_recordings_analysis.jira.utils import parse_markdown, create_jira_issue, create_jira_task, get_active_sprint_id, add_to_sprint, chunk_text
 from pydub.utils import make_chunks
 from pydub import AudioSegment
 from meeting_recordings_analysis.tasks import Tasks
@@ -115,6 +115,24 @@ class MeetingMinutesFlow:
 
         return result
 
+    def generate_mp3_using_transcript(self, output_path="output-marathi.wav"):
+        print("Generating MP3")
+        file_path = "transcript-marathi.txt"
+        file_content = ""
+        with open(file_path, "r", encoding="utf-8") as file:
+            file_content = file.read()
+
+        chunks = chunk_text(file_content)
+        with open(output_path, "wb") as f:
+            for chunk in chunks:
+                response = client.audio.speech.create(
+                    model="tts-1",  # OpenAI's TTS model
+                    input=chunk,
+                    voice="alloy"  # You can change the voice to "nova" or "echo"
+                )
+                f.write(response.content)
+        print(f"Audio saved to {output_path}") 
+
     def generate_meeting_minutes_jira_tasks(self):
         try:
             jira_agent = self.agents.summarizer_jira_agent()
@@ -123,7 +141,7 @@ class MeetingMinutesFlow:
 
             crew = Crew(agents=[jira_agent], tasks=[jira_task])
             result = crew.kickoff()
-
+            session.end_session("success")
             # print("jira_agent_result", result)
 
             if result:
@@ -146,7 +164,6 @@ class MeetingMinutesFlow:
 
                     add_to_sprint(sprint_id, [story_id] + task_ids)
                     print("successfully creted jira stories")
-                    session.end_session()
 
             else:
                 print(
