@@ -165,10 +165,9 @@ class Tasks():
     Put them into a nice markdown document.
 
     - Use Todays Date for the meeting date
-    - Use the company name TylerAI for the company name
-    - User Tyler for the name of the organizer
-    - Create a list of attendees from the transcript (make up some if needed)
-    - The location was on Zoom
+    - Use the company name ArieoAi for the company name
+    - User ArieoAi for the name of the organizer
+    - Create a list of attendees from the transcript 
             """),
             expected_output=("""A meeting minutes document"""),
             agent=agent,
