@@ -20,9 +20,6 @@ os.environ["OTEL_SDK_DISABLED"] = "true"
 
 load_dotenv()
 
-session = agentops.init(api_key=os.getenv(
-    "AGENT_OPS_KEY"), skip_auto_end_session=True)
-
 # MSAL Authentication Configuration
 CLIENT_ID = os.getenv("CLIENT_ID")
 TENANT_ID = os.getenv("TENANT_ID")
@@ -145,7 +142,6 @@ class MeetingMinutesFlow:
 
             crew = Crew(agents=[jira_agent], tasks=[jira_task])
             result = crew.kickoff()
-            session.end_session("success")
             # print("jira_agent_result", result)
 
             if result:
