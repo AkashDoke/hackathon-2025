@@ -49,12 +49,16 @@ class MeetingMinutesFlow:
         self.agents = Agents()
         self.tasks = Tasks()
 
-    def transcribe_meeting(self, file_content: str) -> str:
+    def transcribe_meeting(self, file_content: str, filetype: str) -> str:
         print("Generating Transcription")
 
         # Working codebase
         audio_file = io.BytesIO(file_content)
-        audio = AudioSegment.from_file(audio_file, format="wav")
+
+        if filetype == "audio/mpeg":
+            audio = AudioSegment.from_file(audio_file, format="mp3")
+        else:
+            audio = AudioSegment.from_file(audio_file, format="wav")
 
         # # Define chunk length in milliseconds (e.g., 1 minute = 60,000 ms)
         chunk_length_ms = 60000

@@ -526,7 +526,7 @@ if st.session_state.page == "home":
                 st.spinner("Processing your file...")
                 # Simulating transcription process
                 transcription = meeting_minutes_flow.transcribe_meeting(
-                    uploaded_file.read())
+                    uploaded_file.read(), uploaded_file.type)
                 st.text_area("Meeting Transcript", transcription, height=200)
                 st.success("Transcription Complete!")
         else:
